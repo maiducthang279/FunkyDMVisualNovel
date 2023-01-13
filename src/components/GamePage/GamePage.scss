@@ -1,0 +1,15 @@
+.game_page {
+  .item {
+  }
+}
+
+.button {
+  color: aliceblue;
+
+  &.active {
+    color: black;
+  }
+  &:hover {
+    color: red($color: #000000);
+  }
+}
