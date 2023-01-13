@@ -1,24 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import './App.scss';
+import { ConfigProvider } from 'antd';
+import { Outlet } from 'react-router-dom';
+
+const theme = {
+  colorPrimary: '#457db2',
+  colorSuccess: '#81c886',
+  colorError: '#d35553',
+  colorInfo: '#1e4366',
+  colorWarning: '#c58b17',
+  fontSize: 14,
+  borderRadius: 2,
+  wireframe: false,
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ConfigProvider
+      theme={{
+        token: theme,
+      }}
+    >
+      <Outlet />
+    </ConfigProvider>
   );
 }
 
