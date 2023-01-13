@@ -6,7 +6,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import GamePage from './components/GamePage';
 import GamePlay from './components/GamePlay/GamePlay';
-import HomePage from './components/HomePage';
+// import HomePage from './components/HomePage';
 
 const router = createBrowserRouter([
   {
@@ -14,16 +14,16 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: 'game/:gameId',
+        path: 'game',
         element: <GamePage />,
       },
       {
-        path: 'game/:gameId/gameplay',
+        path: 'game/gameplay',
         element: <GamePlay />,
       },
       {
         path: '',
-        element: <HomePage />,
+        element: <GamePage />,
       },
     ],
   },

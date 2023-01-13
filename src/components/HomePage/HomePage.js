@@ -1,10 +1,10 @@
 import React from 'react';
-import GameSettings from '../shared/GameSettings';
+import './HomePage.scss';
 
 const HomePage = () => {
   return (
     <div>
-      <a href={`/game/1`}>Your Name</a>
+      <div></div>
     </div>
   );
 };

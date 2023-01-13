@@ -1,15 +1,64 @@
-.game_page {
-  .item {
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 }
-
-.button {
-  color: aliceblue;
-
-  &.active {
-    color: black;
+.background-gradient {
+  flex-grow: 1;
+  background-image: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 1),
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0)
+  );
+}
+.menu_container {
+  display: flex;
+  box-sizing: border-box;
+  position: relative;
+  height: 100vh;
+  .logo {
+    width: 100%;
+    object-fit: contain;
   }
-  &:hover {
-    color: red($color: #000000);
+  .menu {
+    display: flex;
+    align-items: flex-end;
+    background: #fff;
+    box-sizing: border-box;
+    padding: 2em;
+    max-width: 18em;
+  }
+  .title {
+    font-size: 3rem;
+    font-family: 'Amatic SC', cursive;
+  }
+  .button {
+    position: relative;
+    display: inline;
+    cursor: pointer;
+    font-size: 2rem;
+    width: 100%;
+    font-family: 'Amatic SC', cursive;
+
+    &:hover {
+      &::after {
+        position: absolute;
+        content: '';
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        border-bottom: 1px solid #000;
+      }
+    }
   }
 }
