@@ -2,6 +2,7 @@ import { Col, Row } from 'antd';
 import React from 'react';
 import './GamePage.scss';
 import logo from '../../assets/images/cat-logo.png';
+import { MenuButton } from '../shared/Button';
 
 const GamePage = () => {
   return (
@@ -23,16 +24,16 @@ const GamePage = () => {
                 <h1 className="title">Mèo Hàng Xóm</h1>
               </Col>
               <Col span={24}>
-                <div className="button">Tiếp tục</div>
+                <MenuButton>Tiếp tục</MenuButton>
               </Col>
               <Col span={24}>
-                <div className="button">Bắt đầu</div>
+                <MenuButton>Bắt đầu</MenuButton>
               </Col>
               <Col span={24}>
-                <div className="button">Cài đặt</div>
+                <MenuButton>Cài đặt</MenuButton>
               </Col>
               <Col span={24}>
-                <div className="button">Credit</div>
+                <MenuButton>Credit</MenuButton>
               </Col>
             </Row>
           </div>
