@@ -69,9 +69,6 @@ const GameSettings = () => {
                   <Col className="options" span={18}>
                     <Slider className="slider" defaultValue={100} />
                   </Col>
-                  <Col className="invs" span={24}>
-                    -
-                  </Col>
                 </Row>
               </Col>
               <Col span={24}>
