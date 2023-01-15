@@ -5,6 +5,7 @@ import './GamePage.scss';
 import logo from '../../assets/images/zyro-image.png';
 import { MenuButton } from '../shared/Button';
 import { useNavigate } from 'react-router-dom';
+import GameSettings from '../shared/GameSettings/GameSettings.js';
 
 const GamePage = () => {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ const GamePage = () => {
                 <MenuButton onClick={() => startGame()}>Bắt đầu</MenuButton>
               </Col>
               <Col span={24}>
-                <MenuButton>Cài đặt</MenuButton>
+                <GameSettings />
               </Col>
               <Col span={24}>
                 <MenuButton>Credit</MenuButton>
