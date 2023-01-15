@@ -25,6 +25,9 @@
   box-sizing: border-box;
   position: relative;
   height: 100vh;
+
+  box-sizing: border-box;
+  overflow: hidden;
   .logo {
     width: 100%;
     object-fit: contain;

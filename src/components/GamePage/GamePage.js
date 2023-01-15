@@ -1,10 +1,16 @@
 import { Col, Row } from 'antd';
 import React from 'react';
 import './GamePage.scss';
-import logo from '../../assets/images/cat-logo.png';
+
+import logo from '../../assets/images/zyro-image.png';
 import { MenuButton } from '../shared/Button';
+import { useNavigate } from 'react-router-dom';
 
 const GamePage = () => {
+  const navigate = useNavigate();
+  const startGame = () => {
+    navigate('/game/gameplay');
+  };
   return (
     <div>
       <div className="background">
@@ -27,7 +33,7 @@ const GamePage = () => {
                 <MenuButton>Tiếp tục</MenuButton>
               </Col>
               <Col span={24}>
-                <MenuButton>Bắt đầu</MenuButton>
+                <MenuButton onClick={() => startGame()}>Bắt đầu</MenuButton>
               </Col>
               <Col span={24}>
                 <MenuButton>Cài đặt</MenuButton>

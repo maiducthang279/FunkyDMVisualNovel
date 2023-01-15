@@ -1,6 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from 'react-router-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -23,7 +27,7 @@ const router = createBrowserRouter([
       },
       {
         path: '',
-        element: <GamePage />,
+        element: <Navigate to={'game'} />,
       },
     ],
   },
