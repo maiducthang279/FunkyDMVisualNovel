@@ -10,7 +10,10 @@ import GameSettings from '../shared/GameSettings/GameSettings.js';
 const GamePage = () => {
   const navigate = useNavigate();
   const startGame = () => {
-    navigate('/game/gameplay');
+    navigate('gameplay');
+  };
+  const exit = () => {
+    navigate('/');
   };
   return (
     <div className="main">
@@ -41,6 +44,9 @@ const GamePage = () => {
               </Col>
               <Col span={24}>
                 <MenuButton>Credit</MenuButton>
+              </Col>
+              <Col span={24}>
+                <MenuButton onClick={() => exit()}>Thoát</MenuButton>
               </Col>
             </Row>
           </div>

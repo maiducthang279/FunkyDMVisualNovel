@@ -1,6 +1,14 @@
 import './App.scss';
 import { ConfigProvider } from 'antd';
-import { Outlet } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Root from './routes/root';
+import GamePage from './components/GamePage';
+import GamePlay from './components/GamePlay/GamePlay';
+import HomePage from './components/HomePage/HomePage';
+import Login from './components/LoginPage/Login';
+import { RecoilRoot } from 'recoil';
+import { HelmetProvider } from 'react-helmet-async';
+import { homeLoader } from './components/HomePage';
 
 const theme = {
   colorPrimary: '#457db2',
@@ -13,15 +21,49 @@ const theme = {
   wireframe: false,
 };
 
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Root />,
+    children: [
+      {
+        path: 'game/:gameId',
+        element: <GamePage />,
+        children: [
+          {
+            path: 'gameplay',
+            element: <GamePlay />,
+          },
+        ],
+      },
+      {
+        path: 'login',
+        element: <Login />,
+      },
+      {
+        path: '',
+        element: <HomePage />,
+        loader: homeLoader,
+      },
+    ],
+  },
+]);
+
+const helmetContext = {};
+
 function App() {
   return (
-    <ConfigProvider
-      theme={{
-        token: theme,
-      }}
-    >
-      <Outlet />
-    </ConfigProvider>
+    <RecoilRoot>
+      <HelmetProvider context={helmetContext}>
+        <ConfigProvider
+          theme={{
+            token: theme,
+          }}
+        >
+          <RouterProvider router={router} />
+        </ConfigProvider>
+      </HelmetProvider>
+    </RecoilRoot>
   );
 }
 

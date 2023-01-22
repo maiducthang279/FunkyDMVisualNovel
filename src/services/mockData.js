@@ -1,5 +1,6 @@
 import cat1 from '../assets/images/zyro-image (1).png';
 import cat2 from '../assets/images/zyro-image.png';
+import thumbnail from '../assets/images/thumbnail.png';
 
 // const node = {
 //   id: 1,
@@ -52,6 +53,51 @@ import cat2 from '../assets/images/zyro-image.png';
 //   id: 0,
 //   name: 'Bup',
 // };
+
+export const mockGames = [
+  {
+    id: 0,
+    name: 'Mèo hàng xóm',
+    status: 'Published',
+    description:
+      'An tỉnh dậy trên chiếc giường êm ái. Mọi thứ đều không vấn đề gì trừ bộ lông trắng và cái đuôi đang ngoe nguẩy. An đã hóa thành mèo.',
+    thumbnail: thumbnail,
+    background:
+      'https://cdnb.artstation.com/p/assets/images/images/052/085/069/large/nils-firas-living-room-render-v001.jpg?1658914986',
+  },
+  {
+    id: 1,
+    name: 'Game đang phát triển',
+    status: 'Work in progress',
+    description: 'Nội dung đang được phát triển',
+    thumbnail: 'https://picsum.photos/id/40/200/300',
+    background: 'https://picsum.photos/id/20/600/900',
+  },
+  {
+    id: 2,
+    name: 'Game đang phát triển',
+    status: 'Work in progress',
+    description: 'Nội dung đang được phát triển',
+    thumbnail: 'https://picsum.photos/id/41/200/300',
+    background: 'https://picsum.photos/id/29/600/900',
+  },
+  {
+    id: 3,
+    name: 'Game đang phát triển',
+    status: 'Work in progress',
+    description: 'Nội dung đang được phát triển',
+    thumbnail: 'https://picsum.photos/id/42/200/300',
+    background: 'https://picsum.photos/id/35/600/900',
+  },
+  {
+    id: 4,
+    name: 'Game đang phát triển',
+    status: 'Work in progress',
+    description: 'Nội dung đang được phát triển',
+    thumbnail: 'https://picsum.photos/id/43/200/300',
+    background: 'https://picsum.photos/id/49/600/900',
+  },
+];
 
 export const mockData = [
   {

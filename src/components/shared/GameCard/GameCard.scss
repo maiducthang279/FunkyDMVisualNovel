@@ -1,0 +1,39 @@
+.card {
+  position: relative;
+  padding: 2rem 1rem;
+  border-radius: 4px;
+
+  transition: padding 0.25s ease-in-out;
+
+  .content {
+    cursor: pointer;
+    position: relative;
+
+    top: 0;
+    left: 0;
+
+    border-radius: 4px;
+
+    background-color: #ffffff;
+
+    box-sizing: border-box;
+
+    box-shadow: 1px 1px 5px #000000;
+
+    transition: box-shadow 0.25s ease-in-out, transform 0.25s ease-in-out;
+
+    img {
+      width: 20rem;
+      height: 12rem;
+
+      object-fit: cover;
+    }
+  }
+  &.active {
+    padding: 2rem 2rem;
+    .content {
+      box-shadow: 0px 0px 10px 5px #457db2;
+      transform: scale(1.1, 1.1);
+    }
+  }
+}
