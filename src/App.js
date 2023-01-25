@@ -9,6 +9,9 @@ import Login from './components/LoginPage/Login';
 import { RecoilRoot } from 'recoil';
 import { HelmetProvider } from 'react-helmet-async';
 import { homeLoader } from './components/HomePage';
+import Profile, { profileLoader, ProfileSetting } from './components/Profile';
+import Management from './components/Admin';
+import MainPage from './components/MainPage';
 
 const theme = {
   colorPrimary: '#457db2',
@@ -29,21 +32,42 @@ const router = createBrowserRouter([
       {
         path: 'game/:gameId',
         element: <GamePage />,
-        children: [
-          {
-            path: 'gameplay',
-            element: <GamePlay />,
-          },
-        ],
       },
       {
-        path: 'login',
-        element: <Login />,
+        path: 'game/:gameId/gameplay',
+        element: <GamePlay />,
       },
       {
         path: '',
-        element: <HomePage />,
-        loader: homeLoader,
+        element: <MainPage />,
+        children: [
+          {
+            path: 'profile/:userId',
+            element: <Profile />,
+            loader: profileLoader,
+          },
+          {
+            path: 'profile/settings',
+            element: <ProfileSetting />,
+          },
+          {
+            path: 'profile',
+            element: <Profile />,
+          },
+          {
+            path: 'management',
+            element: <Management />,
+          },
+          {
+            path: 'login',
+            element: <Login />,
+          },
+          {
+            path: '',
+            element: <HomePage />,
+            loader: homeLoader,
+          },
+        ],
       },
     ],
   },

@@ -5,6 +5,7 @@ import { Link, useLoaderData } from 'react-router-dom';
 import GameCard from '../shared/GameCard';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import './HomePage.scss';
+import Header from '../shared/Header';
 
 const HomePage = () => {
   const games = useLoaderData();
@@ -41,16 +42,7 @@ const HomePage = () => {
         )}
       </div>
       <div className="content">
-        <Row>
-          <Col>
-            <Row className="header">
-              <Col className="logo">
-                <h3>FunkyDM</h3>
-                <h1>Visual Novel</h1>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
+        <Header></Header>
         <Row>
           <Col>
             <div className="game_list">
@@ -59,6 +51,8 @@ const HomePage = () => {
                   autoWidth: true,
                   padding: '1rem',
                   pagination: false,
+                  wheel: true,
+                  waitForTransition: true,
                 }}
               >
                 {games.map((game) => (
@@ -89,15 +83,17 @@ const HomePage = () => {
                 </div>
                 <h1>{selectedGame.name}</h1>
                 <div>
-                  <Link to={`/game/${selectedGame.id}`}>
-                    <Button
-                      type="primary"
-                      shape="round"
-                      icon={<CaretRightOutlined />}
-                    >
-                      Start
-                    </Button>
-                  </Link>
+                  {selectedGame.status === 'Published' ? (
+                    <Link to={`/game/${selectedGame.id}`}>
+                      <Button
+                        type="primary"
+                        shape="round"
+                        icon={<CaretRightOutlined />}
+                      >
+                        Start
+                      </Button>
+                    </Link>
+                  ) : null}
                 </div>
                 <p>{selectedGame.description}</p>
               </div>
