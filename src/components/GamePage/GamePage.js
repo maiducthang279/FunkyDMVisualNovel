@@ -5,13 +5,19 @@ import './GamePage.scss';
 import logo from '../../assets/images/zyro-image.png';
 import { MenuButton } from '../shared/Button';
 import { useNavigate } from 'react-router-dom';
-import GameSettings from '../shared/GameSettings/GameSettings.js';
+import GameSettings from '../shared/GameSettings/GameSettings';
+import SaveAndLoad from '../shared/SaveAndLoad/SaveAndLoad';
 
 const GamePage = () => {
   const navigate = useNavigate();
   const startGame = () => {
     navigate('/game/gameplay');
   };
+
+  const loadGame = (slot) => {
+    navigate(`/game/gameplay?slot=${slot}`);
+  }
+
   return (
     <div className="main">
       <div className="background">
@@ -31,7 +37,7 @@ const GamePage = () => {
                 <h1 className="title">Mèo Hàng Xóm</h1>
               </Col>
               <Col span={24}>
-                <MenuButton>Tiếp tục</MenuButton>
+                <SaveAndLoad type="Load" onLoad={(slot) => {loadGame(slot)}} />
               </Col>
               <Col span={24}>
                 <MenuButton onClick={() => startGame()}>Bắt đầu</MenuButton>

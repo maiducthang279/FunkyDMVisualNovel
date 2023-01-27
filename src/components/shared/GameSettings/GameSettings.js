@@ -31,6 +31,7 @@ const GameSettings = () => {
         centered
         open={isModalOpen}
         onCancel={handleCancel}
+        bodyStyle={{height: 250}}
         footer={[
           <MenuButton key={'ok'} onClick={handleCancel}>
             Xong

@@ -8,11 +8,13 @@ import './GamePlay.scss';
 import { MenuButton } from '../shared/Button';
 import { Space } from 'antd';
 import { CaretRightOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { loadMockData } from '../../services/dataService';
 import ChoiceModal from '../shared/ChoiceModal';
+import SaveAndLoad from '../shared/SaveAndLoad/SaveAndLoad';
 
 const GamePlay = () => {
+  const [searchParams] = useSearchParams();
   const { width, height } = useWindowSize();
   const [data, setData] = useState(null);
   const [currentNode, setCurrentNode] = useState(null);
@@ -32,8 +34,14 @@ const GamePlay = () => {
 
   useEffect(() => {
     if (data != null) {
-      setCurrentNode(data.get(0));
+      const slot = searchParams.get("slot");
+      if (slot) {
+        loadGame(slot);
+      } else {
+        setCurrentNode(data.get(0));
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   useEffect(() => {
@@ -114,6 +122,33 @@ const GamePlay = () => {
     }
   };
 
+  const saveGame = (slot) => {
+    const saveData = {
+      currentNode,
+      currentDialog,
+      currentChoice,
+      leftCharacter,
+      rightCharacter,
+      background,
+    }
+    localStorage.setItem(
+      slot,
+      JSON.stringify(saveData)
+    )
+  }
+
+  const loadGame = (slot) => {
+    if (localStorage.getItem(slot) != null) {
+      const loadData = JSON.parse(localStorage.getItem(slot));
+      setCurrentNode(loadData.currentNode);
+      setCurrentDialog(loadData.currentDialog);
+      setCurrentChoice(loadData.currentChoice);
+      setLeftCharacter(loadData.leftCharacter);
+      setRightCharacter(loadData.rightCharacter);
+      setBackground(loadData.background);
+    }
+  }
+
   return currentNode != null ? (
     <>
       <Stage width={getStageSize().width} height={getStageSize().height}>
@@ -158,8 +193,9 @@ const GamePlay = () => {
         </div>
         <div className="footer">
           <Space split={' - '}>
+            <MenuButton>Bỏ qua</MenuButton>
             <MenuButton onClick={() => backToMenu()}>Về trang chủ</MenuButton>
-            <MenuButton>Lưu</MenuButton>
+            <SaveAndLoad type="Save" onSave={(slot) => saveGame(slot)} />
             <MenuButton onClick={() => goToNextStep()}>
               Tiếp theo <CaretRightOutlined />
             </MenuButton>
