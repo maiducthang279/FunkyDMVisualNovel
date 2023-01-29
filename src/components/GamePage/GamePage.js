@@ -10,10 +10,13 @@ import GameSettings from '../shared/GameSettings/GameSettings.js';
 const GamePage = () => {
   const navigate = useNavigate();
   const startGame = () => {
-    navigate('/game/gameplay');
+    navigate('gameplay');
+  };
+  const exit = () => {
+    navigate('/');
   };
   return (
-    <div className="main">
+    <div className="game_page_container">
       <div className="background">
         <img
           src="https://cdnb.artstation.com/p/assets/images/images/052/085/069/large/nils-firas-living-room-render-v001.jpg?1658914986"
@@ -41,6 +44,9 @@ const GamePage = () => {
               </Col>
               <Col span={24}>
                 <MenuButton>Credit</MenuButton>
+              </Col>
+              <Col span={24}>
+                <MenuButton onClick={() => exit()}>Thoát</MenuButton>
               </Col>
             </Row>
           </div>

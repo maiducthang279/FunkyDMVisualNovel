@@ -1,5 +1,6 @@
 import cat1 from '../assets/images/zyro-image (1).png';
 import cat2 from '../assets/images/zyro-image.png';
+import thumbnail from '../assets/images/thumbnail.png';
 
 // const node = {
 //   id: 1,
@@ -52,6 +53,59 @@ import cat2 from '../assets/images/zyro-image.png';
 //   id: 0,
 //   name: 'Bup',
 // };
+
+export const mockGames = [
+  {
+    id: 0,
+    name: 'Mèo hàng xóm',
+    status: 'Published',
+    description:
+      'An tỉnh dậy trên chiếc giường êm ái. Mọi thứ đều không vấn đề gì trừ bộ lông trắng và cái đuôi đang ngoe nguẩy. An đã hóa thành mèo.',
+    thumbnail: thumbnail,
+    background:
+      'https://cdnb.artstation.com/p/assets/images/images/052/085/069/large/nils-firas-living-room-render-v001.jpg?1658914986',
+  },
+  {
+    id: 1,
+    name: 'Game đang phát triển',
+    status: 'Work in progress',
+    description: 'Nội dung đang được phát triển',
+    thumbnail:
+      'https://i.pinimg.com/564x/36/56/8a/36568a093a499a21bbe0f3a10a361123.jpg',
+    background:
+      'https://i.pinimg.com/564x/1c/33/9f/1c339f5a0e447f6b95679d3d8815294d.jpg',
+  },
+  {
+    id: 2,
+    name: 'Game đang phát triển',
+    status: 'Work in progress',
+    description: 'Nội dung đang được phát triển',
+    thumbnail:
+      'https://i.pinimg.com/564x/78/22/63/782263c12f56df53ea1a336bb7efd009.jpg',
+    background:
+      'https://i.pinimg.com/564x/f2/76/3d/f2763dd968e3796f7c24322c6a69c45b.jpg',
+  },
+  {
+    id: 3,
+    name: 'Game đang phát triển',
+    status: 'Work in progress',
+    description: 'Nội dung đang được phát triển',
+    thumbnail:
+      'https://i.pinimg.com/564x/60/e4/c2/60e4c2e0c8d3ab656624e1719a954f72.jpg',
+    background:
+      'https://i.pinimg.com/564x/8f/78/a1/8f78a18b3f0a18d915e5f50cebb51c19.jpg',
+  },
+  {
+    id: 4,
+    name: 'Game đang phát triển',
+    status: 'Work in progress',
+    description: 'Nội dung đang được phát triển',
+    thumbnail:
+      'https://i.pinimg.com/564x/0b/29/44/0b2944e8eb02c42624af369cc345438b.jpg',
+    background:
+      'https://i.pinimg.com/564x/5f/98/fe/5f98fe7e12254f525153956363f1c783.jpg',
+  },
+];
 
 export const mockData = [
   {

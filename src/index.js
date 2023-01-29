@@ -1,42 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {
-  createBrowserRouter,
-  Navigate,
-  RouterProvider,
-} from 'react-router-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import GamePage from './components/GamePage';
-import GamePlay from './components/GamePlay/GamePlay';
 // import HomePage from './components/HomePage';
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <App />,
-    children: [
-      {
-        path: 'game',
-        element: <GamePage />,
-      },
-      {
-        path: 'game/gameplay',
-        element: <GamePlay />,
-      },
-      {
-        path: '',
-        element: <Navigate to={'game'} />,
-      },
-    ],
-  },
-]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <App />
   </React.StrictMode>
 );
 

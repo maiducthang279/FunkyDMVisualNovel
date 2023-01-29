@@ -8,7 +8,7 @@ const ChoiceModal = ({ content, options = [], onOptionClick }) => {
 
   return (
     <div className="backdrop">
-      <div className="container">
+      <div className="choice_container">
         {content && <div className="content">{content}</div>}
         <div className="options">
           {options.map((option, index) => (

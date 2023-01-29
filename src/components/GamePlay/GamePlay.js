@@ -95,7 +95,7 @@ const GamePlay = () => {
   };
 
   const backToMenu = () => {
-    navigate('/game');
+    navigate('/game/0');
   };
 
   const getStageSize = () => ({
