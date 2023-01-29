@@ -48,10 +48,11 @@ const HomePage = () => {
     <div className="home_container">
       <div className="content">
         <Row>
-          <Col>
+          <Col span={24}>
             <div className="game_list">
               <Splide
                 options={{
+                  width: '100%',
                   autoWidth: true,
                   padding: '1rem',
                   pagination: false,
