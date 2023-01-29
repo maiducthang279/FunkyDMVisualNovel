@@ -1,0 +1,67 @@
+.game_editor_form_container {
+  position: relative;
+  .action {
+    position: absolute;
+    z-index: 1;
+    & > * {
+      padding: 0.5rem;
+    }
+    &.right {
+      right: 0;
+    }
+  }
+}
+.text_editor {
+  &.border {
+    border: 1px #ccc solid;
+    .ql-container {
+      font-size: 16px;
+      .ql-editor {
+        p {
+          font-size: 16px;
+          line-height: 1.5;
+          margin-bottom: 0.5rem;
+        }
+      }
+    }
+  }
+}
+
+.playable_metadata_container {
+  .thumbnail_image {
+    .ant-image {
+      border-radius: 4px;
+      img {
+        width: 20rem;
+        height: 12rem;
+        object-fit: cover;
+      }
+    }
+  }
+  .background_image {
+    position: relative;
+    width: 100%;
+    height: 12rem;
+  }
+}
+
+.node_form_container {
+  .name_input {
+    box-sizing: border-box;
+    padding: 0;
+    input {
+      font-weight: 600;
+    }
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(2em);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

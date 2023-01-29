@@ -5,10 +5,13 @@ import { Link, useLoaderData } from 'react-router-dom';
 import GameCard from '../shared/GameCard';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import './HomePage.scss';
-import Header from '../shared/Header';
+import { useSetRecoilState } from 'recoil';
+import { backgroundState } from '../../routes/store';
 
 const HomePage = () => {
   const games = useLoaderData();
+
+  const setBackground = useSetRecoilState(backgroundState);
 
   const [selectedGame, setSelectedGame] = useState(null);
 
@@ -18,6 +21,13 @@ const HomePage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [games]);
+
+  useEffect(() => {
+    if (selectedGame) {
+      setBackground(selectedGame.background);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedGame]);
 
   const renderTag = (status) => {
     switch (status) {
@@ -36,13 +46,7 @@ const HomePage = () => {
 
   return (
     <div className="home_container">
-      <div className="background">
-        {selectedGame && (
-          <img src={selectedGame.background} alt="background"></img>
-        )}
-      </div>
       <div className="content">
-        <Header></Header>
         <Row>
           <Col>
             <div className="game_list">

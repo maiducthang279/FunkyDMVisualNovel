@@ -70,7 +70,8 @@ export const mockGames = [
     name: 'Game đang phát triển',
     status: 'Work in progress',
     description: 'Nội dung đang được phát triển',
-    thumbnail: 'https://picsum.photos/id/40/400/240',
+    thumbnail:
+      'https://i.pinimg.com/564x/36/56/8a/36568a093a499a21bbe0f3a10a361123.jpg',
     background:
       'https://i.pinimg.com/564x/1c/33/9f/1c339f5a0e447f6b95679d3d8815294d.jpg',
   },
@@ -79,7 +80,8 @@ export const mockGames = [
     name: 'Game đang phát triển',
     status: 'Work in progress',
     description: 'Nội dung đang được phát triển',
-    thumbnail: 'https://picsum.photos/id/41/400/240',
+    thumbnail:
+      'https://i.pinimg.com/564x/78/22/63/782263c12f56df53ea1a336bb7efd009.jpg',
     background:
       'https://i.pinimg.com/564x/f2/76/3d/f2763dd968e3796f7c24322c6a69c45b.jpg',
   },

@@ -1,12 +1,14 @@
-import { SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { CopyOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import {
   Avatar,
   Button,
   Card,
   Col,
   Divider,
+  Input,
   Row,
   Space,
+  Tooltip,
   Typography,
 } from 'antd';
 import { useEffect, useState } from 'react';
@@ -14,7 +16,6 @@ import { Link } from 'react-router-dom';
 import { useLoaderData, useParams } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { userState } from '../../routes/store';
-import Header from '../shared/Header';
 
 import './Profile.scss';
 
@@ -74,6 +75,28 @@ const Profile = () => {
                     {profile.displayName}
                   </Title>
                 </Col>
+                <Divider type="horizontal"></Divider>
+                {(currentUser?.uid === userId ||
+                  currentUser?.uid === profile.uid) && (
+                  <Col span={24}>
+                    <Input.Group compact>
+                      <Input
+                        style={{ width: 'calc(100% - 32px)' }}
+                        readOnly
+                        addonBefore="ID:"
+                        value={profile.uid}
+                      />
+                      <Tooltip title="copy git url">
+                        <Button
+                          icon={<CopyOutlined />}
+                          onClick={() => {
+                            navigator.clipboard.writeText(profile.uid);
+                          }}
+                        />
+                      </Tooltip>
+                    </Input.Group>
+                  </Col>
+                )}
                 <Divider type="horizontal"></Divider>
                 <Col span={24}>
                   <Paragraph

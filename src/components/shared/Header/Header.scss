@@ -1,5 +1,8 @@
+@import '../../../style/variable.scss';
+
 .header {
   padding: 0rem 2rem;
+  color: $darkTextColor;
   .logo {
     cursor: pointer;
     h1,

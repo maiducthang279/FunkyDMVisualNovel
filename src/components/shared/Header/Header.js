@@ -1,4 +1,4 @@
-import { UserOutlined } from '@ant-design/icons';
+import { EditOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Col, Popover, Row, Space } from 'antd';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,9 +9,13 @@ import { logout } from '../../../services/firebaseServices';
 import './Header.scss';
 
 const UserPopoverContent = () => {
+  const [permission] = useRecoilState(permissionState);
   return (
     <Space direction="vertical">
       <Link to={'/profile'}>Profile</Link>
+      {['moderator', 'admin'].includes(permission) && (
+        <Link to={'/management'}>Management</Link>
+      )}
       <Link
         to={'#'}
         onClick={() => {
@@ -50,9 +54,11 @@ const Header = () => {
         <Col>
           <Space>
             {['creator', 'moderator', 'admin'].includes(permission) && (
-              <Button type="text" style={{ color: 'white' }}>
-                Project
-              </Button>
+              <Link to={`/creator`}>
+                <Button type="default" ghost>
+                  <EditOutlined /> For Creator
+                </Button>
+              </Link>
             )}
           </Space>
         </Col>
@@ -74,7 +80,7 @@ const Header = () => {
     );
   };
   return (
-    <Row className="header" align="middle" gutter={8}>
+    <Row className="header" align="middle" gutter={16}>
       <Col className="logo" onClick={goHome}>
         <h1>Visual Novel</h1>
       </Col>

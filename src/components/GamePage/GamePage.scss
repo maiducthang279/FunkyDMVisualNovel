@@ -1,53 +1,53 @@
-.main {
+.game_page_container {
   position: relative;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-}
-.background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  img {
+  .background {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    z-index: 0;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
-}
-.background-gradient {
-  flex-grow: 1;
-  background-image: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 1),
-    rgba(255, 255, 255, 0),
-    rgba(255, 255, 255, 0)
-  );
-}
-.menu_container {
-  display: flex;
-  box-sizing: border-box;
-  position: relative;
-  height: 100vh;
-
-  box-sizing: border-box;
-  overflow: hidden;
-  .logo {
-    width: 100%;
-    object-fit: contain;
+  .background-gradient {
+    flex-grow: 1;
+    background-image: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 1),
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0)
+    );
   }
-  .menu {
+  .menu_container {
     display: flex;
-    align-items: flex-end;
-    background: #fff;
     box-sizing: border-box;
-    padding: 2em;
-    max-width: 18em;
-  }
-  .title {
-    font-size: 3rem;
-    font-family: 'Amatic SC', cursive;
+    position: relative;
+    height: 100vh;
+
+    box-sizing: border-box;
+    overflow: hidden;
+    .logo {
+      width: 100%;
+      object-fit: contain;
+    }
+    .menu {
+      display: flex;
+      align-items: flex-end;
+      background: #fff;
+      box-sizing: border-box;
+      padding: 2em;
+      max-width: 18em;
+    }
+    .title {
+      font-size: 3rem;
+      font-family: 'Amatic SC', cursive;
+    }
   }
 }

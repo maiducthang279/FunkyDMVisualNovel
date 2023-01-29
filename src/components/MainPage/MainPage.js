@@ -1,25 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { backgroundState } from '../../routes/store';
+import Background from '../shared/Background/Background';
 import Header from '../shared/Header';
 
-const MainPage = () => {
-  const { pathname } = useLocation();
-  const [isFullscreen, setIsFullscreen] = useState(false);
+import './MainPage.scss';
 
-  useEffect(() => {
-    if (pathname === '/') {
-      setIsFullscreen(false);
-    } else {
-      setIsFullscreen(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+const MainPage = () => {
+  const [background] = useRecoilState(backgroundState);
 
   return (
-    <>
-      {isFullscreen && <Header></Header>}
+    <div className="main_container">
+      <Background src={background}></Background>
+      <Header></Header>
       <Outlet></Outlet>
-    </>
+    </div>
   );
 };
 

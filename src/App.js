@@ -12,6 +12,12 @@ import { homeLoader } from './components/HomePage';
 import Profile, { profileLoader, ProfileSetting } from './components/Profile';
 import Management from './components/Admin';
 import MainPage from './components/MainPage';
+import CreatorPage from './components/CreatorPage';
+import ProjectPage, { projectLoader } from './components/ProjectPage';
+import ErrorPage from './ErrorPage';
+import GameEditorPage from './components/GameEditorPage';
+import ProtectedRoute from './components/shared/ProtectedRoute/ProtectedRoute';
+import { gameEditorLoader } from './components/shared/ProtectedRoute';
 
 const theme = {
   colorPrimary: '#457db2',
@@ -28,6 +34,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: 'game/:gameId',
@@ -36,6 +43,15 @@ const router = createBrowserRouter([
       {
         path: 'game/:gameId/gameplay',
         element: <GamePlay />,
+      },
+      {
+        path: 'game-editor/:gameId',
+        element: (
+          <ProtectedRoute permission={'EDIT_GAME'}>
+            <GameEditorPage />
+          </ProtectedRoute>
+        ),
+        loader: gameEditorLoader,
       },
       {
         path: '',
@@ -53,6 +69,15 @@ const router = createBrowserRouter([
           {
             path: 'profile',
             element: <Profile />,
+          },
+          {
+            path: 'creator',
+            element: <CreatorPage />,
+          },
+          {
+            path: 'projects/:projectId',
+            element: <ProjectPage />,
+            loader: projectLoader,
           },
           {
             path: 'management',

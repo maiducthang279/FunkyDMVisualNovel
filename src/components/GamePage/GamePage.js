@@ -16,7 +16,7 @@ const GamePage = () => {
     navigate('/');
   };
   return (
-    <div className="main">
+    <div className="game_page_container">
       <div className="background">
         <img
           src="https://cdnb.artstation.com/p/assets/images/images/052/085/069/large/nils-firas-living-room-render-v001.jpg?1658914986"

@@ -9,3 +9,8 @@ export const permissionState = atom({
   key: 'permission',
   default: 'user',
 });
+
+export const backgroundState = atom({
+  key: 'background',
+  default: null,
+});

@@ -1,5 +1,5 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Space, Table, TableColumnsType } from 'antd';
+import { Avatar, Space, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getAllUsers } from '.';

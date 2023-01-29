@@ -2,7 +2,7 @@ import { Card, Col, Row, Tabs } from 'antd';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { permissionState } from '../../routes/store';
-import AdminPostTable from './AdminPostTable';
+import AdminGameTable from './AdminGameTable';
 import AdminUserTable from './AdminUserTable';
 
 const Management = () => {
@@ -21,7 +21,7 @@ const Management = () => {
       items.push({
         label: `Game`,
         key: '2',
-        children: <AdminPostTable></AdminPostTable>,
+        children: <AdminGameTable></AdminGameTable>,
       });
     }
     setTabs(items);
