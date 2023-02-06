@@ -1,0 +1,38 @@
+.game_characters {
+  .character_name {
+    display: flex;
+    align-items: center;
+    padding-top: 0.5rem;
+    .ant-typography {
+      margin: 0.5rem 0;
+    }
+  }
+  .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .ant-typography {
+      margin: 0.5rem 0;
+    }
+  }
+  .character_image {
+    width: 100%;
+
+    .title {
+      padding: 0 0.5rem;
+      background-color: #00000005;
+    }
+    border: 1px solid #d9d9d9;
+    border-radius: 2px;
+    .image_container {
+      border-top: 1px solid #d9d9d9;
+      display: flex;
+      justify-content: center;
+    }
+    img {
+      width: 100%;
+      height: 10rem;
+      object-fit: contain;
+    }
+  }
+}

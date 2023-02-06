@@ -15,9 +15,8 @@ import MainPage from './components/MainPage';
 import CreatorPage from './components/CreatorPage';
 import ProjectPage, { projectLoader } from './components/ProjectPage';
 import ErrorPage from './ErrorPage';
-import GameEditorPage from './components/GameEditorPage';
+import GameEditorPage, { gameEditorLoader } from './components/GameEditorPage';
 import ProtectedRoute from './components/shared/ProtectedRoute/ProtectedRoute';
-import { gameEditorLoader } from './components/shared/ProtectedRoute';
 
 const theme = {
   colorPrimary: '#457db2',

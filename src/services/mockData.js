@@ -109,6 +109,11 @@ export const mockGames = [
 
 export const mockData = [
   {
+    id: 'root',
+    name: 'root',
+    nextId: 0,
+  },
+  {
     id: 0,
     type: 'event',
     eventType: 'Set Background',
