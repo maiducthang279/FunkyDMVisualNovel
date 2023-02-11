@@ -1,9 +1,9 @@
 import { Line } from 'react-konva';
-import { getColor, PlayableContentNodePaddingX } from './createTree.util';
-import { NodeDefaultSize } from './gameEditor.util';
+import { getColor, PlayableContentNodePaddingX } from '../createTree.util';
+import { NodeDefaultSize } from '../gameEditor.util';
 
-const GameNodeLine = ({ treeLine }) => {
-  const { previousNode, nextNode } = treeLine;
+const GameNodeLine = ({ line }) => {
+  const { previousNode, nextNode, optionIndex } = line;
   const getPoints = () => {
     const startPoint = getStartPoint();
     const endPoint = getEndPoint();
@@ -19,16 +19,11 @@ const GameNodeLine = ({ treeLine }) => {
   };
 
   const getStartPoint = () => {
-    const { x, y, node } = previousNode;
-    switch (node.type) {
+    const { x = 0, y = 0, type } = previousNode;
+    switch (type) {
       case 'choice':
-        const nodeHeight = node.content
-          ? NodeDefaultSize.contentHeight
-          : NodeDefaultSize.noContentHeight;
-        const index =
-          node.options?.findIndex(
-            (item) => item.nextNode === nextNode.node.id
-          ) || 0;
+        const nodeHeight = NodeDefaultSize.noContentHeight;
+        const index = optionIndex || 0;
         return [
           x + NodeDefaultSize.width + NodeDefaultSize.padding,
           y +
@@ -39,7 +34,7 @@ const GameNodeLine = ({ treeLine }) => {
       default:
         return [
           x + NodeDefaultSize.width,
-          y + NodeDefaultSize.contentHeight / 2,
+          y + NodeDefaultSize.noContentHeight / 2,
         ];
     }
   };
@@ -51,7 +46,7 @@ const GameNodeLine = ({ treeLine }) => {
   return (
     <Line
       points={getPoints()}
-      stroke={getColor(previousNode.node.type)}
+      stroke={getColor(previousNode.type)}
       strokeWidth={4}
       bezier={true}
     ></Line>

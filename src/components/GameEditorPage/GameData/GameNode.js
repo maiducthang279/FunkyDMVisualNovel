@@ -1,7 +1,7 @@
 import React from 'react';
 import { Circle, Group, Rect, Text } from 'react-konva';
-import { getColor } from './createTree.util';
-import { createNodeSize, NodeDefaultSize } from './gameEditor.util';
+import { getColor } from '../createTree.util';
+import { createNodeSize, NodeDefaultSize } from '../gameEditor.util';
 
 const GameNode = ({
   node,
@@ -10,6 +10,11 @@ const GameNode = ({
   fontSize = NodeDefaultSize.fontSize,
   isFocused,
   onClick = (_nodeId) => void 0,
+  onDragEnd = (_event) => void 0,
+  onContextMenu = (_event) => void 0,
+  onDblClick = (_event) => void 0,
+  onDragMove = (_event) => void 0,
+  onDragStart = (_event) => void 0,
 }) => {
   const { padding, width, height, optionHeight } = createNodeSize(
     fontSize,
@@ -17,12 +22,50 @@ const GameNode = ({
   );
   const typeWidth = 100;
 
+  const handleOnDragEnd = (event) => {
+    onDragEnd({
+      x: event.target.attrs.x,
+      y: event.target.attrs.y,
+      node: node,
+    });
+  };
+
+  const handleOnContextMenu = () => {
+    onContextMenu(node);
+  };
+
+  const handleDblClick = () => {
+    onDblClick(node);
+  };
+
+  const handleDragMove = (event) => {
+    onDragMove({
+      x: event.target.attrs.x,
+      y: event.target.attrs.y,
+      node: node,
+    });
+  };
+
+  const handleDragStart = (event) => {
+    onDragStart({
+      x: event.target.attrs.x,
+      y: event.target.attrs.y,
+      node: node,
+    });
+  };
+
   return (
     <Group
       x={x}
       y={y}
       onClick={() => onClick(node.id)}
       onTap={() => onClick(node.id)}
+      draggable={node.type !== 'root'}
+      onContextMenu={handleOnContextMenu}
+      onDblClick={handleDblClick}
+      onDragEnd={handleOnDragEnd}
+      onDragMove={handleDragMove}
+      onDragStart={handleDragStart}
     >
       <Rect
         x={0}
@@ -46,7 +89,7 @@ const GameNode = ({
       <Text
         x={-fontSize / 2 - padding / 2}
         y={-fontSize / 2 - padding / 2 + 2}
-        text={node.type}
+        text={node.type?.toUpperCase()}
         width={typeWidth}
         height={fontSize + padding}
         fontSize={fontSize}
@@ -65,14 +108,14 @@ const GameNode = ({
         padding={padding}
         ellipsis
       ></Text>
-      {node.nextNode && (
+      {node.nextId ? (
         <Circle
           x={width}
           y={height / 2}
           radius={6}
           fill={getColor(node.type)}
         ></Circle>
-      )}
+      ) : null}
       {node.options?.map((item, index) => (
         <Group key={index} x={0} y={height + index * optionHeight}>
           <Rect width={width} height={optionHeight} fill="white" />

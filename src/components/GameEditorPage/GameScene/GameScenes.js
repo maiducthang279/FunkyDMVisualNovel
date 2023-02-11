@@ -24,7 +24,17 @@ const GameScenes = () => {
     const newScene = {
       name: `Scene ${scenes.length + 1}`,
       gameId: game.id,
-      data: {},
+      data: {
+        global: {},
+        nodes: [
+          {
+            id: 'root',
+            name: 'root',
+            type: 'root',
+            nextId: 0,
+          },
+        ],
+      },
     };
     addNewScene(newScene).then((result) => {
       setScenes([...scenes, { id: result.id, ...newScene }]);

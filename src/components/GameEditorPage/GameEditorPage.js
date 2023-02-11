@@ -22,10 +22,12 @@ import {
   charactersState,
   backgroundsState,
   scenesState,
+  currentEditedSceneState,
 } from '../../routes/store';
 import LoadingEffectIcon from '../shared/LoadingEffectIcon';
 import GameBackgrounds from './GameBackground';
 import GameCharacters from './GameCharacter';
+import GameData from './GameData/GameData';
 import './GameEditorPage.scss';
 import GameMetadataForm from './GameMetadata';
 import GameScenes from './GameScene';
@@ -48,6 +50,7 @@ const GameEditorPage = () => {
   const [, setCharacters] = useRecoilState(charactersState);
   const [, setBackgrounds] = useRecoilState(backgroundsState);
   const [, setScenes] = useRecoilState(scenesState);
+  const [, setCurrentScene] = useRecoilState(currentEditedSceneState);
 
   const [formState, setFormState] = useRecoilState(formStatusState);
   const [isPublishing, setIsPublishing] = useState(false);
@@ -60,6 +63,9 @@ const GameEditorPage = () => {
     setCharacters(loaderData.characters);
     setBackgrounds(loaderData.backgrounds);
     setScenes(loaderData.scenes);
+    if (loaderData.scenes.length > 0) {
+      setCurrentScene(loaderData.scenes[0]);
+    }
     console.log(loaderData);
     return () => {
       setGame(null);
@@ -173,6 +179,9 @@ const GameEditorPage = () => {
           />
         </Tooltip>
       </Space>
+      <div className="main">
+        <GameData />
+      </div>
       <Drawer
         title="Main menu"
         placement="left"
