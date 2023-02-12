@@ -264,7 +264,7 @@ const GamePlay = () => {
           {currentDialog?.character && (
             <h1>{`${currentDialog?.character?.name}:`}</h1>
           )}
-          <p>{renderText}</p>
+          <div className="paragraph">{renderText}</div>
         </div>
         <div className="footer">
           <Space split={' - '}>
