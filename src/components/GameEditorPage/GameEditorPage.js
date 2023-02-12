@@ -133,7 +133,10 @@ const GameEditorPage = () => {
             item.id === currentScene.id ? currentScene : item
           )
         );
-        openNotification();
+        openNotification({
+          message: 'Saved',
+          description: 'Current game was saved!',
+        });
       })
       .finally(() => {
         setFormState(FORM_STATUS.SAVED);

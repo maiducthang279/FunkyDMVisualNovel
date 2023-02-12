@@ -64,9 +64,8 @@ export const EVENT_TYPES = [
   { value: 'Go to Next Scene', label: 'Go to Next Scene' },
 ];
 
-export const openNotification = () => {
+export const openNotification = (data) => {
   notification.success({
-    message: 'Saved',
-    description: 'Current scene was saved!',
+    ...data,
   });
 };

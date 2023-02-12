@@ -1,14 +1,5 @@
 import { EditOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
-import {
-  Button,
-  Col,
-  Collapse,
-  Divider,
-  notification,
-  Row,
-  Space,
-  Typography,
-} from 'antd';
+import { Button, Col, Collapse, Divider, Row, Space, Typography } from 'antd';
 import React, { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { addNewScene, deleteScene, updateScene } from '.';
@@ -83,7 +74,10 @@ const GameScenes = () => {
             item.id === currentScene.id ? currentScene : item
           )
         );
-        openNotification();
+        openNotification({
+          message: 'Saved',
+          description: 'Current scene was saved!',
+        });
       })
       .finally(() => {
         setIsLoading(false);

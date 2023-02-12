@@ -18,7 +18,7 @@ const GameNode = ({
 }) => {
   const { padding, width, height, optionHeight } = createNodeSize(
     fontSize,
-    false
+    node.content?.length > 0
   );
   const typeWidth = 100;
 
@@ -110,6 +110,17 @@ const GameNode = ({
         padding={padding}
         ellipsis
       ></Text>
+      {node.content && (
+        <Text
+          y={fontSize + padding * 2}
+          text={node.content}
+          width={width}
+          height={fontSize * 4 + padding * 2}
+          fontSize={fontSize}
+          padding={padding}
+          ellipsis
+        ></Text>
+      )}
       {node.nextId ? (
         <Circle
           x={width}

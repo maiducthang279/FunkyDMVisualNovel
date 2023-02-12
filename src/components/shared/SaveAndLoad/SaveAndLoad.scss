@@ -1,0 +1,41 @@
+.saveSlot {
+  cursor: pointer;
+  &:hover {
+    background-color: #FDFF93;
+  }
+}
+
+.title {
+  font-family: 'Amatic SC', cursive;
+  font-size: 3rem;
+  text-align: center;
+}
+
+.text {
+  font-family: 'Amatic SC', cursive;
+  font-size: 1.5rem;
+  text-align: left;
+}
+
+.screenshot {
+  width: 10em;
+  height: 8em;
+  padding: 0.5em;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .emtpy_screenshot {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Amatic SC', cursive;
+    font-size: 2em;
+    background-color: #333333;
+    color: #FFFFFF;
+  }
+}

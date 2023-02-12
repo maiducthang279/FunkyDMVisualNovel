@@ -20,9 +20,11 @@ const GameNodeLine = ({ line }) => {
 
   const getStartPoint = () => {
     const { x = 0, y = 0, type } = previousNode;
+    const nodeHeight = previousNode.content
+      ? NodeDefaultSize.contentHeight
+      : NodeDefaultSize.noContentHeight;
     switch (type) {
       case 'choice':
-        const nodeHeight = NodeDefaultSize.noContentHeight;
         const index = optionIndex || 0;
         return [
           x + NodeDefaultSize.width + NodeDefaultSize.padding,
@@ -32,10 +34,7 @@ const GameNodeLine = ({ line }) => {
             (NodeDefaultSize.optionHeight / 2 - NodeDefaultSize.padding / 4),
         ];
       default:
-        return [
-          x + NodeDefaultSize.width,
-          y + NodeDefaultSize.noContentHeight / 2,
-        ];
+        return [x + NodeDefaultSize.width, y + nodeHeight / 2];
     }
   };
   const getEndPoint = () => [

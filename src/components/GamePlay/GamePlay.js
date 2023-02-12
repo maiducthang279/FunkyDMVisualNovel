@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Layer, Stage } from 'react-konva';
 import { useWindowSize } from '../../hook/useWindowSize';
 import KonvaBackground from '../shared/KonvaComponents/KonvaBackground';
@@ -8,12 +8,19 @@ import './GamePlay.scss';
 import { MenuButton } from '../shared/Button';
 import { Space } from 'antd';
 import { CaretRightOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
-import { loadMockData } from '../../services/dataService';
 import ChoiceModal from '../shared/ChoiceModal';
+import SaveAndLoad from '../shared/SaveAndLoad/SaveAndLoad';
+import moment from 'moment';
+import AnimatedText from 'react-animated-text-content';
+import { sceneLoader } from '.';
+import Loading from '../shared/Loading';
+import { convertNodeToData } from '../../services/dataService';
 
-const GamePlay = () => {
+const GamePlay = ({ game, loadGameSlot, onBack }) => {
   const { width, height } = useWindowSize();
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentScene, setCurrentScene] = useState(null);
   const [data, setData] = useState(null);
   const [currentNode, setCurrentNode] = useState(null);
 
@@ -24,17 +31,62 @@ const GamePlay = () => {
   const [rightCharacter, setRightCharacter] = useState(null);
   const [background, setBackground] = useState(null);
 
-  const navigate = useNavigate();
+  const [isDisable, setIsDisable] = useState(false);
+
+  const [setting, setSetting] = useState({
+    textSpeed: 50,
+    music: 100,
+    sFX: 100,
+    voice: 100,
+  });
+
+  const handleKeyPress = useCallback(
+    (event) => {
+      const key = event.key;
+      if (event.repeat) {
+        return;
+      } else {
+        if (key === 'Enter' || key === ' ') {
+          goToNextStep();
+        } else {
+          return;
+        }
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentNode]
+  );
 
   useEffect(() => {
-    setData(loadMockData());
+    if (loadGameSlot != null) {
+      loadGame(loadGameSlot);
+    } else {
+      if (game.rootScene) {
+        setIsLoading(true);
+        sceneLoader(game.rootScene)
+          .then((res) => {
+            setCurrentScene(res);
+            setData(convertNodeToData(res.data.nodes));
+            setCurrentNode(res.data.nodes[0]);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
+      } else {
+        window.alert('Error game. Please go back.');
+      }
+    }
+    loadSetting();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (data != null) {
-      setCurrentNode(data.get(0));
-    }
-  }, [data]);
+    document.addEventListener('keydown', handleKeyPress);
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handleKeyPress]);
 
   useEffect(() => {
     if (currentNode == null) {
@@ -42,11 +94,15 @@ const GamePlay = () => {
     }
     const { type } = currentNode;
     switch (type) {
+      case 'root':
+        goToNextStep();
+        break;
       case 'dialog':
         handleDialog(currentNode);
         break;
       case 'choice':
         handleChoice(currentNode);
+        setIsDisable(true);
         break;
       case 'event':
         handleEvent(currentNode);
@@ -75,27 +131,43 @@ const GamePlay = () => {
       case 'Set Background':
         initBackground(params);
         break;
+      case 'Go to Next Scene':
+        goToNextScene(params);
+        break;
       default:
         break;
     }
   }, []);
 
   const initCharacter = (params) => {
-    const { position } = params;
-    if (position === 'left') {
+    const { characterPosition } = params;
+    if (characterPosition === 'left') {
       setLeftCharacter(params);
     }
-    if (position === 'right') {
+    if (characterPosition === 'right') {
       setRightCharacter(params);
     }
   };
   const initBackground = (params) => {
-    const { backgroundImage } = params;
-    setBackground(backgroundImage);
+    const { backgroundUrl } = params;
+    setBackground(backgroundUrl);
+  };
+
+  const goToNextScene = (param) => {
+    setIsLoading(true);
+    sceneLoader(param.nextSceneId)
+      .then((res) => {
+        setCurrentScene(res);
+        setData(convertNodeToData(res.data.nodes));
+        setCurrentNode(res.data.nodes[0]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const backToMenu = () => {
-    navigate('/game/0');
+    onBack && onBack();
   };
 
   const getStageSize = () => ({
@@ -106,13 +178,91 @@ const GamePlay = () => {
   const handleOptionClick = (option) => {
     setCurrentNode(data.get(option.nextId));
     setCurrentChoice(null);
+    setIsDisable(false);
   };
 
   const goToNextStep = () => {
-    if (currentNode.nextId != null) {
+    if (currentNode.nextId != null && currentNode.nextId !== '') {
       setCurrentNode(data.get(currentNode.nextId));
     }
   };
+
+  const saveGame = (slot) => {
+    const saveData = {
+      currentSceneId: currentScene.id,
+      currentNode,
+      currentDialog,
+      currentChoice,
+      leftCharacter,
+      rightCharacter,
+      background,
+      dateTime: moment().format('hh:mm | DD/MM/YYYY'),
+    };
+    localStorage.setItem(slot, JSON.stringify(saveData));
+  };
+
+  const loadSetting = () => {
+    if (localStorage.getItem('setting') != null) {
+      setSetting(JSON.parse(localStorage.getItem('setting')));
+    }
+  };
+
+  const loadGame = (slot) => {
+    if (localStorage.getItem(slot) != null) {
+      const loadData = JSON.parse(localStorage.getItem(slot));
+      setIsLoading(true);
+      sceneLoader(loadData.currentSceneId)
+        .then((res) => {
+          setCurrentScene(res);
+          setData(convertNodeToData(res.data.nodes));
+          setCurrentNode(loadData.currentNode);
+          setCurrentDialog(loadData.currentDialog);
+          setCurrentChoice(loadData.currentChoice);
+          setLeftCharacter(loadData.leftCharacter);
+          setRightCharacter(loadData.rightCharacter);
+          setBackground(loadData.background);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  };
+
+  const skipToOption = (node) => {
+    const nextNode = data.get(node.nextId);
+    if (!nextNode) {
+      return;
+    }
+    goToStep(nextNode);
+    if (nextNode.type !== 'choice') {
+      setTimeout(() => skipToOption(nextNode), 500);
+    }
+  };
+
+  const goToStep = (node) => {
+    if (node != null) {
+      setCurrentNode(node);
+    }
+  };
+
+  const renderText = useMemo(
+    () => (
+      <AnimatedText
+        type="words"
+        interval={0.15 - setting.textSpeed / 1000}
+        animation={{
+          ease: 'ease',
+        }}
+      >
+        {currentDialog?.content}
+      </AnimatedText>
+    ),
+    [currentDialog?.content, setting.textSpeed]
+  );
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return currentNode != null ? (
     <>
@@ -129,21 +279,21 @@ const GamePlay = () => {
         >
           {leftCharacter && (
             <KonvaCharacter
-              url={leftCharacter.image}
+              url={leftCharacter.characterImage}
               isLeft={true}
               isMain={
-                currentDialog?.character?.id != null &&
-                currentDialog?.character?.id === leftCharacter.id
+                currentDialog?.characterId != null &&
+                currentDialog?.characterId === leftCharacter.characterId
               }
             ></KonvaCharacter>
           )}
           {rightCharacter && (
             <KonvaCharacter
-              url={rightCharacter.image}
+              url={rightCharacter.characterImage}
               isLeft={false}
               isMain={
-                currentDialog?.character?.id != null &&
-                currentDialog?.character?.id === rightCharacter.id
+                currentDialog?.characterId != null &&
+                currentDialog?.characterId === rightCharacter.characterId
               }
             ></KonvaCharacter>
           )}
@@ -151,16 +301,28 @@ const GamePlay = () => {
       </Stage>
       <div className="game_gui">
         <div className="content">
-          {currentDialog?.character && (
-            <h1>{`${currentDialog?.character?.name}:`}</h1>
+          {currentDialog?.characterName && (
+            <h1>{`${currentDialog?.characterName}:`}</h1>
           )}
-          <p>{currentDialog?.content}</p>
+          <div className="paragraph">{renderText}</div>
         </div>
         <div className="footer">
           <Space split={' - '}>
+            <MenuButton
+              disabled={isDisable}
+              onClick={() => skipToOption(currentNode)}
+            >
+              Bỏ qua
+            </MenuButton>
             <MenuButton onClick={() => backToMenu()}>Về trang chủ</MenuButton>
-            <MenuButton>Lưu</MenuButton>
-            <MenuButton onClick={() => goToNextStep()}>
+            <SaveAndLoad
+              type="Load"
+              onLoad={(slot) => {
+                loadGame(slot);
+              }}
+            />
+            <SaveAndLoad type="Save" onSave={(slot) => saveGame(slot)} />
+            <MenuButton disabled={isDisable} onClick={() => goToNextStep()}>
               Tiếp theo <CaretRightOutlined />
             </MenuButton>
           </Space>

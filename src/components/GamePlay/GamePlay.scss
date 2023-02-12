@@ -31,14 +31,16 @@
   .content {
     overflow: auto;
     h1,
-    p {
+    p,
+    .paragraph {
       margin: 0;
       padding: 0rem 2rem;
     }
     h1 {
       font-weight: 800;
     }
-    p {
+    p,
+    .paragraph {
       font-size: 2rem;
     }
   }
