@@ -136,8 +136,8 @@ const GamePlay = () => {
     }
   };
   const initBackground = (params) => {
-    const { backgroundImage } = params;
-    setBackground(backgroundImage);
+    const { backgroundUrl } = params;
+    setBackground(backgroundUrl);
   };
 
   const backToMenu = () => {

@@ -65,61 +65,65 @@ function SaveAndLoad({ onLoad, onSave, type }) {
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        title={[
-          <h1 className="title">{type === 'Load' ? 'Tiếp tục' : 'Lưu'}</h1>,
-        ]}
+        title={
+          <h1 className="title">{type === 'Load' ? 'Tiếp tục' : 'Lưu'}</h1>
+        }
         footer={[
           <MenuButton key={'ok'} onClick={handleCancel}>
             Quay Lại
           </MenuButton>,
         ]}
       >
-        {saveData &&
-          saveData.map((item, index) =>
-            item ? (
-              <Row className="saveSlot" key={index} align="middle">
-                <Col span={22} onClick={() => handleClickSaveSlot(index + 1)}>
-                  <Row>
-                    <Col className="screenshot" span={7}>
-                      <img src={item.background} alt="background"></img>
-                    </Col>
-                    <Col span={17}>
-                      <Row className="text">Save Slot {index + 1}</Row>
-                      <Row className="text">{item.dateTime}</Row>
-                    </Col>
-                  </Row>
-                </Col>
-                <Col span={2}>
-                  <MenuButton onClick={() => handleDeleteSaveSlot(index + 1)}>
-                    {' '}
-                    <DeleteOutlined />{' '}
-                  </MenuButton>
-                </Col>
-              </Row>
-            ) : (
-              <Row className="saveSlot" key={index} align="middle">
-                <Col span={22} onClick={() => handleClickSaveSlot(index + 1)}>
-                  <Row>
-                    <Col className="screenshot" span={7}>
-                      <div className="emtpy_screenshot">Empty Slot</div>
-                    </Col>
-                    <Col span={17}>
-                      <Row className="text">Save Slot {index + 1}</Row>
-                      <Row className="text">Empty Slot</Row>
-                    </Col>
-                  </Row>
-                </Col>
-                <Col span={2}>
-                  <div>
+        <>
+          {saveData &&
+            saveData.map((item, index) =>
+              item ? (
+                <Row className="saveSlot" key={index} align="middle">
+                  <Col span={22} onClick={() => handleClickSaveSlot(index + 1)}>
+                    <Row>
+                      <Col className="screenshot" span={7}>
+                        <img src={item.background} alt="background"></img>
+                      </Col>
+                      <Col span={17}>
+                        <Row className="text">Save Slot {index + 1}</Row>
+                        <Row className="text">{item.dateTime}</Row>
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col span={2}>
                     <MenuButton onClick={() => handleDeleteSaveSlot(index + 1)}>
                       {' '}
                       <DeleteOutlined />{' '}
                     </MenuButton>
-                  </div>
-                </Col>
-              </Row>
-            )
-          )}
+                  </Col>
+                </Row>
+              ) : (
+                <Row className="saveSlot" key={index} align="middle">
+                  <Col span={22} onClick={() => handleClickSaveSlot(index + 1)}>
+                    <Row>
+                      <Col className="screenshot" span={7}>
+                        <div className="emtpy_screenshot">Empty Slot</div>
+                      </Col>
+                      <Col span={17}>
+                        <Row className="text">Save Slot {index + 1}</Row>
+                        <Row className="text">Empty Slot</Row>
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col span={2}>
+                    <div>
+                      <MenuButton
+                        onClick={() => handleDeleteSaveSlot(index + 1)}
+                      >
+                        {' '}
+                        <DeleteOutlined />{' '}
+                      </MenuButton>
+                    </div>
+                  </Col>
+                </Row>
+              )
+            )}
+        </>
       </Modal>
     </>
   );
