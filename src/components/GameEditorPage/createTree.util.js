@@ -1,5 +1,3 @@
-import { NodeDefaultSize } from './gameEditor.util';
-
 export const PlayableContentNodePaddingX = 100;
 export const PlayableContentNodePaddingY = 50;
 
