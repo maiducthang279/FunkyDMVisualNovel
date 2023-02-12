@@ -1,8 +1,21 @@
-import { Col, Divider, Form, Image, Input, Row, Typography } from 'antd';
+import {
+  Col,
+  Divider,
+  Form,
+  Image,
+  Input,
+  Row,
+  Select,
+  Typography,
+} from 'antd';
 import React, { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { editGameMetadata } from '..';
-import { formStatusState, FORM_STATUS } from '../../../routes/store';
+import {
+  formStatusState,
+  FORM_STATUS,
+  scenesState,
+} from '../../../routes/store';
 import { defaultImage } from '../../../services/util';
 import Background from '../../shared/Background/Background';
 import UploadImage from '../../shared/UploadImage/UploadImage';
@@ -13,6 +26,7 @@ const { Title, Text } = Typography;
 const GameMetadataForm = ({ game, form }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [formState, setFormState] = useRecoilState(formStatusState);
+  const scenes = useRecoilValue(scenesState);
   const thumbnailPhotoUrlValue = Form.useWatch('thumbnail', form);
   const backgroundPhotoUrlValue = Form.useWatch('background', form);
 
@@ -70,6 +84,21 @@ const GameMetadataForm = ({ game, form }) => {
                 autoSize={{ maxRows: 3 }}
                 maxLength={150}
               />
+            </Form.Item>
+            <Text>
+              <Text type="danger">*</Text> Root Scene
+            </Text>
+            <Form.Item
+              name="rootScene"
+              rules={[{ required: true, message: 'Can not be empty!' }]}
+            >
+              <Select
+                placeholder="Scene"
+                options={scenes.map((scene) => ({
+                  value: scene.id,
+                  label: scene.name,
+                }))}
+              ></Select>
             </Form.Item>
 
             <div className="group_form_item">

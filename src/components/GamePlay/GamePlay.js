@@ -8,16 +8,19 @@ import './GamePlay.scss';
 import { MenuButton } from '../shared/Button';
 import { Space } from 'antd';
 import { CaretRightOutlined } from '@ant-design/icons';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { loadMockData } from '../../services/dataService';
 import ChoiceModal from '../shared/ChoiceModal';
 import SaveAndLoad from '../shared/SaveAndLoad/SaveAndLoad';
 import moment from 'moment';
 import AnimatedText from 'react-animated-text-content';
+import { sceneLoader } from '.';
+import Loading from '../shared/Loading';
+import { convertNodeToData } from '../../services/dataService';
 
-const GamePlay = () => {
-  const [searchParams] = useSearchParams();
+const GamePlay = ({ game, loadGameSlot, onBack }) => {
   const { width, height } = useWindowSize();
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentScene, setCurrentScene] = useState(null);
   const [data, setData] = useState(null);
   const [currentNode, setCurrentNode] = useState(null);
 
@@ -37,8 +40,6 @@ const GamePlay = () => {
     voice: 100,
   });
 
-  const navigate = useNavigate();
-
   const handleKeyPress = useCallback(
     (event) => {
       const key = event.key;
@@ -57,8 +58,26 @@ const GamePlay = () => {
   );
 
   useEffect(() => {
-    setData(loadMockData());
+    if (loadGameSlot != null) {
+      loadGame(loadGameSlot);
+    } else {
+      if (game.rootScene) {
+        setIsLoading(true);
+        sceneLoader(game.rootScene)
+          .then((res) => {
+            setCurrentScene(res);
+            setData(convertNodeToData(res.data.nodes));
+            setCurrentNode(res.data.nodes[0]);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
+      } else {
+        window.alert('Error game. Please go back.');
+      }
+    }
     loadSetting();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -70,23 +89,14 @@ const GamePlay = () => {
   }, [handleKeyPress]);
 
   useEffect(() => {
-    if (data != null) {
-      const slot = searchParams.get('slot');
-      if (slot) {
-        loadGame(slot);
-      } else {
-        setCurrentNode(data.get(0));
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
-
-  useEffect(() => {
     if (currentNode == null) {
       return;
     }
     const { type } = currentNode;
     switch (type) {
+      case 'root':
+        goToNextStep();
+        break;
       case 'dialog':
         handleDialog(currentNode);
         break;
@@ -121,17 +131,20 @@ const GamePlay = () => {
       case 'Set Background':
         initBackground(params);
         break;
+      case 'Go to Next Scene':
+        goToNextScene(params);
+        break;
       default:
         break;
     }
   }, []);
 
   const initCharacter = (params) => {
-    const { position } = params;
-    if (position === 'left') {
+    const { characterPosition } = params;
+    if (characterPosition === 'left') {
       setLeftCharacter(params);
     }
-    if (position === 'right') {
+    if (characterPosition === 'right') {
       setRightCharacter(params);
     }
   };
@@ -140,8 +153,21 @@ const GamePlay = () => {
     setBackground(backgroundUrl);
   };
 
+  const goToNextScene = (param) => {
+    setIsLoading(true);
+    sceneLoader(param.nextSceneId)
+      .then((res) => {
+        setCurrentScene(res);
+        setData(convertNodeToData(res.data.nodes));
+        setCurrentNode(res.data.nodes[0]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
   const backToMenu = () => {
-    navigate('/game/0');
+    onBack && onBack();
   };
 
   const getStageSize = () => ({
@@ -156,13 +182,14 @@ const GamePlay = () => {
   };
 
   const goToNextStep = () => {
-    if (currentNode.nextId != null) {
+    if (currentNode.nextId != null && currentNode.nextId !== '') {
       setCurrentNode(data.get(currentNode.nextId));
     }
   };
 
   const saveGame = (slot) => {
     const saveData = {
+      currentSceneId: currentScene.id,
       currentNode,
       currentDialog,
       currentChoice,
@@ -183,12 +210,21 @@ const GamePlay = () => {
   const loadGame = (slot) => {
     if (localStorage.getItem(slot) != null) {
       const loadData = JSON.parse(localStorage.getItem(slot));
-      setCurrentNode(loadData.currentNode);
-      setCurrentDialog(loadData.currentDialog);
-      setCurrentChoice(loadData.currentChoice);
-      setLeftCharacter(loadData.leftCharacter);
-      setRightCharacter(loadData.rightCharacter);
-      setBackground(loadData.background);
+      setIsLoading(true);
+      sceneLoader(loadData.currentSceneId)
+        .then((res) => {
+          setCurrentScene(res);
+          setData(convertNodeToData(res.data.nodes));
+          setCurrentNode(loadData.currentNode);
+          setCurrentDialog(loadData.currentDialog);
+          setCurrentChoice(loadData.currentChoice);
+          setLeftCharacter(loadData.leftCharacter);
+          setRightCharacter(loadData.rightCharacter);
+          setBackground(loadData.background);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     }
   };
 
@@ -224,6 +260,10 @@ const GamePlay = () => {
     [currentDialog?.content, setting.textSpeed]
   );
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return currentNode != null ? (
     <>
       <Stage width={getStageSize().width} height={getStageSize().height}>
@@ -239,21 +279,21 @@ const GamePlay = () => {
         >
           {leftCharacter && (
             <KonvaCharacter
-              url={leftCharacter.image}
+              url={leftCharacter.characterImage}
               isLeft={true}
               isMain={
-                currentDialog?.character?.id != null &&
-                currentDialog?.character?.id === leftCharacter.id
+                currentDialog?.characterId != null &&
+                currentDialog?.characterId === leftCharacter.characterId
               }
             ></KonvaCharacter>
           )}
           {rightCharacter && (
             <KonvaCharacter
-              url={rightCharacter.image}
+              url={rightCharacter.characterImage}
               isLeft={false}
               isMain={
-                currentDialog?.character?.id != null &&
-                currentDialog?.character?.id === rightCharacter.id
+                currentDialog?.characterId != null &&
+                currentDialog?.characterId === rightCharacter.characterId
               }
             ></KonvaCharacter>
           )}
@@ -261,8 +301,8 @@ const GamePlay = () => {
       </Stage>
       <div className="game_gui">
         <div className="content">
-          {currentDialog?.character && (
-            <h1>{`${currentDialog?.character?.name}:`}</h1>
+          {currentDialog?.characterName && (
+            <h1>{`${currentDialog?.characterName}:`}</h1>
           )}
           <div className="paragraph">{renderText}</div>
         </div>

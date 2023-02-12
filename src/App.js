@@ -2,8 +2,7 @@ import './App.scss';
 import { ConfigProvider } from 'antd';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Root from './routes/root';
-import GamePage from './components/GamePage';
-import GamePlay from './components/GamePlay/GamePlay';
+import GamePage, { gameLoader } from './components/GamePage';
 import HomePage from './components/HomePage/HomePage';
 import Login from './components/LoginPage/Login';
 import { RecoilRoot } from 'recoil';
@@ -38,10 +37,7 @@ const router = createBrowserRouter([
       {
         path: 'game/:gameId',
         element: <GamePage />,
-      },
-      {
-        path: 'game/:gameId/gameplay',
-        element: <GamePlay />,
+        loader: gameLoader,
       },
       {
         path: 'game-editor/:gameId',
