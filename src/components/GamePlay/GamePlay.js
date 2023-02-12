@@ -51,8 +51,8 @@ const GamePlay = () => {
           return;
         }
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentNode]
   );
 
