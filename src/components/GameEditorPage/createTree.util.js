@@ -35,10 +35,20 @@ export const createLine = (nodes) => {
     .filter(({ previousNode, nextNode }) => !!previousNode && !!nextNode);
 };
 
-const getChildrenNodeIds = (node) =>
+export const getChildrenNodeIds = (node) =>
   node.nextId
     ? [{ nextId: node.nextId, optionIndex: null }]
     : node.options
         ?.filter((otp) => !!otp.nextId)
         .map((opt, index) => ({ nextId: opt.nextId, optionIndex: index })) ||
       [];
+
+export const checkNodeHasLink = (nodeId, links) => {
+  console.log(
+    links.some(({ rootId, nextId }) => rootId === nodeId || nextId === nodeId)
+  );
+  console.log(links);
+  return links.some(
+    ({ rootId, nextId }) => rootId === nodeId || nextId === nodeId
+  );
+};

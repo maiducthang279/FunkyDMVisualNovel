@@ -1,3 +1,4 @@
+import { notification } from 'antd';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc } from 'firebase/firestore';
 import React from 'react';
@@ -9,6 +10,7 @@ import { getUserData, setData, updateData } from '../services/firebaseServices';
 import { permissionState, userState } from './store';
 
 export default function Root() {
+  const [, contextHolder] = notification.useNotification();
   const setUser = useSetRecoilState(userState);
   const setPermission = useSetRecoilState(permissionState);
   useEffect(() => {
@@ -58,5 +60,10 @@ export default function Root() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  return <Outlet></Outlet>;
+  return (
+    <>
+      <Outlet></Outlet>
+      {contextHolder}
+    </>
+  );
 }

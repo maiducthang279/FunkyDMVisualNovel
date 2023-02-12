@@ -1,6 +1,15 @@
-import { EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, Divider, Row, Space, Typography } from 'antd';
-import React from 'react';
+import { EditOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
+import {
+  Button,
+  Col,
+  Collapse,
+  Divider,
+  notification,
+  Row,
+  Space,
+  Typography,
+} from 'antd';
+import React, { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { addNewScene, deleteScene, updateScene } from '.';
 import {
@@ -8,6 +17,8 @@ import {
   currentEditedSceneState,
   scenesState,
 } from '../../../routes/store';
+import LoadingEffectIcon from '../../shared/LoadingEffectIcon';
+import { openNotification } from '../gameEditor.util';
 import './GameScenes.scss';
 import GameScenesDelete from './GameScenesDelete';
 
@@ -19,6 +30,8 @@ const GameScenes = () => {
   const [currentScene, setCurrentScene] = useRecoilState(
     currentEditedSceneState
   );
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleAddScene = () => {
     const newScene = {
@@ -41,20 +54,40 @@ const GameScenes = () => {
     });
   };
   const handleChangeSceneName = (sceneId, value) => {
+    setIsLoading(true);
     updateScene(sceneId, {
       name: value,
-    }).then(() => {
-      setScenes((prev) =>
-        prev.map((item) =>
-          item.id === sceneId
-            ? {
-                ...item,
-                name: value,
-              }
-            : item
-        )
-      );
-    });
+    })
+      .then(() => {
+        setScenes((prev) =>
+          prev.map((item) =>
+            item.id === sceneId
+              ? {
+                  ...item,
+                  name: value,
+                }
+              : item
+          )
+        );
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const handleSaveScene = () => {
+    setIsLoading(true);
+    updateScene(currentScene.id, currentScene)
+      .then(() => {
+        setScenes((prev) =>
+          prev.map((item) =>
+            item.id === currentScene.id ? currentScene : item
+          )
+        );
+        openNotification();
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
   const handleDeleteScene = (sceneId) => {
     deleteScene(sceneId).then(() => {
@@ -62,7 +95,11 @@ const GameScenes = () => {
     });
   };
   const handleSelecteScene = (scene) => {
-    setCurrentScene(scene);
+    if (
+      window.confirm('Are you save scene before starting edit another scene?')
+    ) {
+      setCurrentScene(scene);
+    }
   };
 
   return (
@@ -80,35 +117,66 @@ const GameScenes = () => {
       </Row>
       <br />
       <div>
-        {scenes.map((scene) => (
-          <div
-            className={`scene_container ${
-              currentScene?.id === scene.id ? 'active' : ''
-            }`}
-            key={scene.id}
-          >
-            <Paragraph
-              editable={{
-                onChange: (value) => handleChangeSceneName(scene.id, value),
-              }}
+        <Collapse accordion defaultActiveKey={currentScene.id}>
+          {scenes.map((scene) => (
+            <Collapse.Panel
+              header={`${scene.name}${
+                currentScene.id === scene.id ? ' - Editing ' : ''
+              }`}
+              key={scene.id}
             >
-              {scene.name}
-            </Paragraph>
-            <Space split={<Divider type="vertical" />}>
-              <GameScenesDelete
-                id={scene.id}
-                name={scene.name}
-                onSuccess={handleDeleteScene}
-              ></GameScenesDelete>
-              <Button
-                type="link"
-                size="small"
-                icon={<EditOutlined />}
-                onClick={() => handleSelecteScene(scene)}
-              ></Button>
-            </Space>
-          </div>
-        ))}
+              <Row>
+                <Paragraph>
+                  <b>Name:&nbsp;</b>
+                </Paragraph>
+                <Paragraph
+                  style={{ flexGrow: 1 }}
+                  editable={{
+                    onChange: (value) => handleChangeSceneName(scene.id, value),
+                  }}
+                >
+                  {scene.name}
+                </Paragraph>
+              </Row>
+              <Divider style={{ margin: '0.5rem' }} />
+              <Row justify={'end'}>
+                <Space split={<Divider type="vertical" />}>
+                  {currentScene.id === scene.id ? (
+                    <Button
+                      type="link"
+                      size="small"
+                      icon={
+                        <LoadingEffectIcon
+                          isLoading={isLoading}
+                          icon={<SaveOutlined />}
+                        ></LoadingEffectIcon>
+                      }
+                      onClick={() => handleSaveScene()}
+                    >
+                      Save
+                    </Button>
+                  ) : (
+                    <>
+                      <GameScenesDelete
+                        id={scene.id}
+                        name={scene.name}
+                        onSuccess={handleDeleteScene}
+                      ></GameScenesDelete>
+                      <Button
+                        type="link"
+                        size="small"
+                        icon={<EditOutlined />}
+                        onClick={() => handleSelecteScene(scene)}
+                      >
+                        Edit
+                      </Button>
+                    </>
+                  )}
+                </Space>
+              </Row>
+            </Collapse.Panel>
+          ))}
+        </Collapse>
       </div>
     </div>
   );

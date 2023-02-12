@@ -5,22 +5,29 @@ import {
 } from '@ant-design/icons';
 import { Button, Divider, Form, Input, Row, Select, Space, Tag } from 'antd';
 import React, { useEffect, useMemo } from 'react';
-import { useRecoilState } from 'recoil';
-import { currentEditedSceneState } from '../../../routes/store';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  charactersState,
+  currentEditedSceneState,
+} from '../../../routes/store';
 import { getColor } from '../createTree.util';
+import { EVENT_TYPES } from '../gameEditor.util';
 
 import './GameData.scss';
+import GameEventForm from './GameEventForm/GameEventForm';
+
+const defaultOptions = [{ value: '', label: 'None' }];
 
 const GameNodeForm = ({ form, node, onFinish }) => {
+  const characterIdValue = Form.useWatch('characterId', form);
   const [currentScene] = useRecoilState(currentEditedSceneState);
+  const characters = useRecoilValue(charactersState);
   const nextNodeOptions = useMemo(() => {
-    const actionOptions = [{ value: '', label: 'None' }];
-
     return currentScene !== null && node != null
       ? [
-          ...actionOptions,
+          ...defaultOptions,
           ...currentScene.data.nodes
-            .filter((item) => item.type !== 'root' || item.id !== node.id)
+            .filter((item) => item.type !== 'root' && item.id !== node.id)
             .map((item) => ({
               value: item.id,
               label: `${item.name} - ${item.type}`,
@@ -28,6 +35,32 @@ const GameNodeForm = ({ form, node, onFinish }) => {
         ]
       : [];
   }, [currentScene, node]);
+  const characterOptions = useMemo(
+    () => [
+      ...defaultOptions,
+      ...characters.map((item) => ({
+        value: item.id,
+        label: item.name,
+      })),
+    ],
+    [characters]
+  );
+
+  useEffect(() => {
+    if (characterIdValue === '') {
+      form.setFieldValue('characterName', '');
+    } else if (
+      characterIdValue != null &&
+      form.getFieldValue('characterName') === ''
+    ) {
+      const newName =
+        characters.find(({ id }) => id === characterIdValue)?.name ?? '';
+      if (newName !== '') {
+        form.setFieldValue('characterName', newName);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [characterIdValue]);
 
   if (!node) {
     return null;
@@ -71,22 +104,29 @@ const GameNodeForm = ({ form, node, onFinish }) => {
           <Form.Item
             name={'content'}
             rules={[{ max: 5000, message: 'Maximum 150 characters' }]}
-            hidden={node.type === 'root'}
           >
             <Input.TextArea placeholder="Input content here" autoSize />
           </Form.Item>
         )}
-
-        {['dialog', 'root'].includes(node.type) && (
-          <Form.Item label="Next to" name={'nextId'}>
-            <Select
-              showSearch
-              placeholder="Node"
-              style={{ width: '100%' }}
-              options={nextNodeOptions}
-            ></Select>
-          </Form.Item>
+        {node.type === 'dialog' && (
+          <>
+            <Divider>Character</Divider>
+            <Form.Item name={'characterId'}>
+              <Select
+                showSearch
+                placeholder="Character"
+                options={characterOptions}
+              ></Select>
+            </Form.Item>
+            <Form.Item name={'characterName'}>
+              <Input
+                placeholder="Chacracter display name"
+                disabled={characterIdValue == null || characterIdValue === ''}
+              />
+            </Form.Item>
+          </>
         )}
+        {node.type === 'event' && <GameEventForm form={form} />}
         {node.type === 'choice' && (
           <Form.List name={'options'}>
             {(fields, { add, remove }) => (
@@ -110,7 +150,7 @@ const GameNodeForm = ({ form, node, onFinish }) => {
                         <Select
                           showSearch
                           placeholder="Node"
-                          options={nextNodeOptions()}
+                          options={nextNodeOptions}
                         ></Select>
                       </Form.Item>
                     </div>
@@ -138,6 +178,23 @@ const GameNodeForm = ({ form, node, onFinish }) => {
               </>
             )}
           </Form.List>
+        )}
+        {['dialog', 'root', 'event'].includes(node.type) && (
+          <>
+            <Divider>Ref</Divider>
+            <Form.Item label="Next to" name={'nextId'}>
+              <Select
+                showSearch
+                placeholder="Node"
+                style={{ width: '100%' }}
+                options={nextNodeOptions}
+                optionFilterProp="label"
+                filterOption={(input, option) =>
+                  (option?.label ?? '').includes(input)
+                }
+              ></Select>
+            </Form.Item>
+          </>
         )}
       </Form>
     </div>

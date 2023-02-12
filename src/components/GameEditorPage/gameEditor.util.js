@@ -1,3 +1,5 @@
+import { notification } from 'antd';
+
 export const createNodeSize = (fontSize, hasContent) => {
   const padding = fontSize;
   const width = fontSize * 12;
@@ -25,6 +27,8 @@ export const makeNewNode = (type, data) => {
       newNode = {
         content: '',
         nextId: '',
+        characterId: '',
+        characterName: '',
       };
       break;
     case 'choice':
@@ -35,6 +39,8 @@ export const makeNewNode = (type, data) => {
       break;
     case 'event':
       newNode = {
+        eventType: 'None',
+        params: {},
         nextId: '',
       };
       break;
@@ -49,4 +55,18 @@ export const makeNewNode = (type, data) => {
     ...newNode,
     ...data,
   };
+};
+
+export const EVENT_TYPES = [
+  { value: 'None', label: 'None' },
+  { value: 'Set Background', label: 'Set Background' },
+  { value: 'Set Character', label: 'Set Character' },
+  { value: 'Go to Next Scene', label: 'Go to Next Scene' },
+];
+
+export const openNotification = () => {
+  notification.success({
+    message: 'Saved',
+    description: 'Current scene was saved!',
+  });
 };

@@ -23,9 +23,11 @@ const GameNode = ({
   const typeWidth = 100;
 
   const handleOnDragEnd = (event) => {
+    const newX = Math.round(event.target.attrs.x / 10) * 10;
+    const newY = Math.round(event.target.attrs.y / 10) * 10;
     onDragEnd({
-      x: event.target.attrs.x,
-      y: event.target.attrs.y,
+      x: newX,
+      y: newY,
       node: node,
     });
   };
@@ -60,7 +62,7 @@ const GameNode = ({
       y={y}
       onClick={() => onClick(node.id)}
       onTap={() => onClick(node.id)}
-      draggable={node.type !== 'root'}
+      draggable
       onContextMenu={handleOnContextMenu}
       onDblClick={handleDblClick}
       onDragEnd={handleOnDragEnd}

@@ -40,7 +40,9 @@ const GameScenesDelete = ({ id, name, onSuccess = () => void 0 }) => {
         size="small"
         icon={<DeleteOutlined />}
         onClick={showModal}
-      ></Button>
+      >
+        Delete
+      </Button>
       <Modal
         title="Delete scene"
         open={isModalOpen}

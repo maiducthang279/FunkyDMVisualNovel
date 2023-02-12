@@ -28,9 +28,10 @@ import LoadingEffectIcon from '../shared/LoadingEffectIcon';
 import GameBackgrounds from './GameBackground';
 import GameCharacters from './GameCharacter';
 import GameData from './GameData/GameData';
+import { openNotification } from './gameEditor.util';
 import './GameEditorPage.scss';
 import GameMetadataForm from './GameMetadata';
-import GameScenes from './GameScene';
+import GameScenes, { updateScene } from './GameScene';
 
 const DRAWERS = {
   MAIN_MENU: 'MAIN_MENU',
@@ -50,7 +51,9 @@ const GameEditorPage = () => {
   const [, setCharacters] = useRecoilState(charactersState);
   const [, setBackgrounds] = useRecoilState(backgroundsState);
   const [, setScenes] = useRecoilState(scenesState);
-  const [, setCurrentScene] = useRecoilState(currentEditedSceneState);
+  const [currentScene, setCurrentScene] = useRecoilState(
+    currentEditedSceneState
+  );
 
   const [formState, setFormState] = useRecoilState(formStatusState);
   const [isPublishing, setIsPublishing] = useState(false);
@@ -66,7 +69,6 @@ const GameEditorPage = () => {
     if (loaderData.scenes.length > 0) {
       setCurrentScene(loaderData.scenes[0]);
     }
-    console.log(loaderData);
     return () => {
       setGame(null);
       setProject(null);
@@ -121,8 +123,21 @@ const GameEditorPage = () => {
     if (formState === FORM_STATUS.SAVING) {
       return;
     }
-    metadataForm.submit();
-    setFormState(FORM_STATUS.SAVED);
+    if (formState === FORM_STATUS.DIRTY) {
+      metadataForm.submit();
+    }
+    updateScene(currentScene.id, currentScene)
+      .then(() => {
+        setScenes((prev) =>
+          prev.map((item) =>
+            item.id === currentScene.id ? currentScene : item
+          )
+        );
+        openNotification();
+      })
+      .finally(() => {
+        setFormState(FORM_STATUS.SAVED);
+      });
   };
   const handleGoBackHome = () => {
     window.location = '/';
@@ -143,6 +158,14 @@ const GameEditorPage = () => {
             onClick={() => handleOpenDrawer(DRAWERS.MAIN_MENU)}
           />
         </Tooltip>
+        <Tooltip title="Scene" placement="left">
+          <Button
+            type="primary"
+            shape="circle"
+            icon={<ApartmentOutlined />}
+            onClick={() => handleOpenDrawer(DRAWERS.SCENE)}
+          />
+        </Tooltip>
       </Space>
       <Space className="action right" direction="vertical">
         <Tooltip title="Setting" placement="left">
@@ -154,14 +177,6 @@ const GameEditorPage = () => {
           />
         </Tooltip>
         <div className="divider"></div>
-        <Tooltip title="Scene" placement="left">
-          <Button
-            type="primary"
-            shape="circle"
-            icon={<ApartmentOutlined />}
-            onClick={() => handleOpenDrawer(DRAWERS.SCENE)}
-          />
-        </Tooltip>
         <Tooltip title="Character" placement="left">
           <Button
             type="primary"
@@ -246,12 +261,17 @@ const GameEditorPage = () => {
         placement="right"
         onClose={handleCloseDrawer}
         open={openedDrawer === DRAWERS.SETTING}
+        extra={
+          <Button type="primary" onClick={() => metadataForm.submit()}>
+            Save
+          </Button>
+        }
       >
         <GameMetadataForm game={game} form={metadataForm} />
       </Drawer>
       <Drawer
         title="Scene"
-        placement="right"
+        placement="left"
         onClose={handleCloseDrawer}
         open={openedDrawer === DRAWERS.SCENE}
       >

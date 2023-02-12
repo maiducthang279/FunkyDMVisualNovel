@@ -11,7 +11,11 @@ import './GameData.scss';
 import ContextMenu from '../../shared/ContextMenu';
 import GameNodeForm from './GameNodeForm';
 import GameNodeLine from './GameNodeLine';
-import { createLine } from '../createTree.util';
+import {
+  checkNodeHasLink,
+  createLine,
+  getChildrenNodeIds,
+} from '../createTree.util';
 import * as _ from 'lodash';
 import { makeNewNode } from '../gameEditor.util';
 
@@ -47,6 +51,11 @@ const DEFAULT_MENU_ITEMS = [
   createMenuItem({
     name: 'Duplicate',
     key: 'duplicate',
+    type: 'node',
+  }),
+  createMenuItem({
+    name: 'Duplicate after this',
+    key: 'duplicateAfterThis',
     type: 'node',
   }),
 ];
@@ -97,7 +106,7 @@ const GameData = () => {
         ],
       },
     }));
-  const duplicateNode = (node) =>
+  const duplicateNode = (node, optionId = null) =>
     setCurrentScene((prev) => ({
       ...prev,
       data: {
@@ -106,10 +115,10 @@ const GameData = () => {
           ...prev.data.nodes,
           {
             ...node,
-            id: uniqid(),
+            id: optionId || uniqid(),
             name: node.name + ' copy',
-            x: node.x + 50,
-            y: node.y + 50,
+            x: node.x + 250,
+            y: node.y,
             nextId: null,
             options: !!node.options
               ? node.options.map(({ nextId, ...rest }) => ({ ...rest }))
@@ -118,6 +127,16 @@ const GameData = () => {
         ],
       },
     }));
+  const duplicateAfterThisNode = (node) => {
+    const newId = uniqid();
+    duplicateNode(node, newId);
+    if (['dialog', 'event'].includes(node.type)) {
+      updateNode({
+        ...node,
+        nextId: newId,
+      });
+    }
+  };
   const updateNode = (updatedNode) =>
     setCurrentScene((prev) => ({
       ...prev,
@@ -134,13 +153,22 @@ const GameData = () => {
       },
     }));
   const deleteNode = (node) => {
-    setCurrentScene((prev) => ({
-      ...prev,
-      data: {
-        ...prev.data,
-        nodes: prev.data.nodes.filter(({ id }) => id !== node.id),
-      },
-    }));
+    if (!checkNodeHasLink(node.id, listLine)) {
+      if (currentNode.id === node.id) {
+        setCurrentNode(null);
+      }
+      setCurrentScene((prev) => ({
+        ...prev,
+        data: {
+          ...prev.data,
+          nodes: prev.data.nodes.filter(({ id }) => id !== node.id),
+        },
+      }));
+    } else {
+      window.alert(
+        'You cannot delete the node that has links to other nodes. Please remove all links before deleting a node.'
+      );
+    }
   };
 
   const startEditNode = (node) => {
@@ -148,11 +176,11 @@ const GameData = () => {
       nodeForm.setFieldsValue(node);
       setCurrentNode(node);
     } else {
-      const edittingNode = {
+      const editingNode = {
         ...currentNode,
         ...nodeForm.getFieldsValue(),
       };
-      if (_.isEqual(edittingNode, currentNode)) {
+      if (_.isEqual(editingNode, currentNode)) {
         nodeForm.setFieldsValue(node);
         setCurrentNode(node);
       } else {
@@ -267,6 +295,9 @@ const GameData = () => {
       case 'duplicate':
         duplicateNode(contextNode);
         break;
+      case 'duplicateAfterThis':
+        duplicateAfterThisNode(contextNode);
+        break;
       default:
         break;
     }
@@ -286,7 +317,6 @@ const GameData = () => {
         name="stage"
       >
         <Layer offsetY={-getStageSize().height / 2} offsetX={-200}>
-          <Rect x={0} y={0} width={10} height={10} fill="red" />
           {listLine.map((line) => (
             <GameNodeLine
               line={line}
@@ -295,6 +325,8 @@ const GameData = () => {
               }`}
             ></GameNodeLine>
           ))}
+        </Layer>
+        <Layer offsetY={-getStageSize().height / 2} offsetX={-200}>
           {currentLines.map((line) => (
             <GameNodeLine
               line={line}
