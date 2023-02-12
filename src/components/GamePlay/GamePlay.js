@@ -12,6 +12,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { loadMockData } from '../../services/dataService';
 import ChoiceModal from '../shared/ChoiceModal';
 import SaveAndLoad from '../shared/SaveAndLoad/SaveAndLoad';
+import moment from 'moment/moment';
 
 const GamePlay = () => {
   const [searchParams] = useSearchParams();
@@ -25,6 +26,8 @@ const GamePlay = () => {
   const [leftCharacter, setLeftCharacter] = useState(null);
   const [rightCharacter, setRightCharacter] = useState(null);
   const [background, setBackground] = useState(null);
+
+  const [isDisable, setIsDisable] = useState(false);
 
   const navigate = useNavigate();
 
@@ -55,6 +58,7 @@ const GamePlay = () => {
         break;
       case 'choice':
         handleChoice(currentNode);
+        setIsDisable(true);
         break;
       case 'event':
         handleEvent(currentNode);
@@ -114,6 +118,7 @@ const GamePlay = () => {
   const handleOptionClick = (option) => {
     setCurrentNode(data.get(option.nextId));
     setCurrentChoice(null);
+    setIsDisable(false);
   };
 
   const goToNextStep = () => {
@@ -121,6 +126,7 @@ const GamePlay = () => {
       setCurrentNode(data.get(currentNode.nextId));
     }
   };
+
 
   const saveGame = (slot) => {
     const saveData = {
@@ -130,6 +136,7 @@ const GamePlay = () => {
       leftCharacter,
       rightCharacter,
       background,
+      dateTime: moment().format("hh:mm | DD/MM/YYYY"),
     }
     localStorage.setItem(
       slot,
@@ -146,6 +153,25 @@ const GamePlay = () => {
       setLeftCharacter(loadData.leftCharacter);
       setRightCharacter(loadData.rightCharacter);
       setBackground(loadData.background);
+    }
+  }
+
+  const skipToOption = (node) => {
+    const nextNode = data.get(node.nextId);
+    if (!nextNode) {
+      return;
+    }
+    goToStep(nextNode);
+    console.log("currentnode:",node.type);
+    console.log("nextnode:",data.get(node.nextId).type);
+    if (nextNode.type !== "choice") {
+      setTimeout(() => skipToOption(nextNode), 500);
+    }
+  }
+
+  const goToStep = (node) => {
+    if (node != null) {
+      setCurrentNode(node);
     }
   }
 
@@ -193,10 +219,10 @@ const GamePlay = () => {
         </div>
         <div className="footer">
           <Space split={' - '}>
-            <MenuButton>Bỏ qua</MenuButton>
+            <MenuButton disabled={isDisable} onClick={() => skipToOption(currentNode)}>Bỏ qua</MenuButton>
             <MenuButton onClick={() => backToMenu()}>Về trang chủ</MenuButton>
             <SaveAndLoad type="Save" onSave={(slot) => saveGame(slot)} />
-            <MenuButton onClick={() => goToNextStep()}>
+            <MenuButton disabled={isDisable} onClick={() => goToNextStep()}>
               Tiếp theo <CaretRightOutlined />
             </MenuButton>
           </Space>
