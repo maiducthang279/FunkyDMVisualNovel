@@ -12,7 +12,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { loadMockData } from '../../services/dataService';
 import ChoiceModal from '../shared/ChoiceModal';
 import SaveAndLoad from '../shared/SaveAndLoad/SaveAndLoad';
-import moment from 'moment/moment';
+import moment from 'moment';
 
 const GamePlay = () => {
   const [searchParams] = useSearchParams();
@@ -37,7 +37,7 @@ const GamePlay = () => {
 
   useEffect(() => {
     if (data != null) {
-      const slot = searchParams.get("slot");
+      const slot = searchParams.get('slot');
       if (slot) {
         loadGame(slot);
       } else {
@@ -127,7 +127,6 @@ const GamePlay = () => {
     }
   };
 
-
   const saveGame = (slot) => {
     const saveData = {
       currentNode,
@@ -136,13 +135,10 @@ const GamePlay = () => {
       leftCharacter,
       rightCharacter,
       background,
-      dateTime: moment().format("hh:mm | DD/MM/YYYY"),
-    }
-    localStorage.setItem(
-      slot,
-      JSON.stringify(saveData)
-    )
-  }
+      dateTime: moment().format('hh:mm | DD/MM/YYYY'),
+    };
+    localStorage.setItem(slot, JSON.stringify(saveData));
+  };
 
   const loadGame = (slot) => {
     if (localStorage.getItem(slot) != null) {
@@ -154,7 +150,7 @@ const GamePlay = () => {
       setRightCharacter(loadData.rightCharacter);
       setBackground(loadData.background);
     }
-  }
+  };
 
   const skipToOption = (node) => {
     const nextNode = data.get(node.nextId);
@@ -162,18 +158,18 @@ const GamePlay = () => {
       return;
     }
     goToStep(nextNode);
-    console.log("currentnode:",node.type);
-    console.log("nextnode:",data.get(node.nextId).type);
-    if (nextNode.type !== "choice") {
+    console.log('currentnode:', node.type);
+    console.log('nextnode:', data.get(node.nextId).type);
+    if (nextNode.type !== 'choice') {
       setTimeout(() => skipToOption(nextNode), 500);
     }
-  }
+  };
 
   const goToStep = (node) => {
     if (node != null) {
       setCurrentNode(node);
     }
-  }
+  };
 
   return currentNode != null ? (
     <>
@@ -219,7 +215,12 @@ const GamePlay = () => {
         </div>
         <div className="footer">
           <Space split={' - '}>
-            <MenuButton disabled={isDisable} onClick={() => skipToOption(currentNode)}>Bỏ qua</MenuButton>
+            <MenuButton
+              disabled={isDisable}
+              onClick={() => skipToOption(currentNode)}
+            >
+              Bỏ qua
+            </MenuButton>
             <MenuButton onClick={() => backToMenu()}>Về trang chủ</MenuButton>
             <SaveAndLoad type="Save" onSave={(slot) => saveGame(slot)} />
             <MenuButton disabled={isDisable} onClick={() => goToNextStep()}>
