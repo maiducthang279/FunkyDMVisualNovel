@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Layer, Stage } from 'react-konva';
 import { useWindowSize } from '../../hook/useWindowSize';
 import KonvaBackground from '../shared/KonvaComponents/KonvaBackground';
@@ -13,6 +13,7 @@ import { loadMockData } from '../../services/dataService';
 import ChoiceModal from '../shared/ChoiceModal';
 import SaveAndLoad from '../shared/SaveAndLoad/SaveAndLoad';
 import moment from 'moment';
+import AnimatedText from 'react-animated-text-content';
 
 const GamePlay = () => {
   const [searchParams] = useSearchParams();
@@ -29,11 +30,44 @@ const GamePlay = () => {
 
   const [isDisable, setIsDisable] = useState(false);
 
+  const [setting, setSetting] = useState({
+    textSpeed: 50,
+    music: 100,
+    sFX: 100,
+    voice: 100,
+  });
+
   const navigate = useNavigate();
+
+  const handleKeyPress = useCallback(
+    (event) => {
+      const key = event.key;
+      if (event.repeat) {
+        return;
+      } else {
+        if (key === 'Enter' || key === ' ') {
+          goToNextStep();
+        } else {
+          return;
+        }
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [currentNode]
+  );
 
   useEffect(() => {
     setData(loadMockData());
+    loadSetting();
   }, []);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyPress);
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handleKeyPress]);
 
   useEffect(() => {
     if (data != null) {
@@ -140,6 +174,12 @@ const GamePlay = () => {
     localStorage.setItem(slot, JSON.stringify(saveData));
   };
 
+  const loadSetting = () => {
+    if (localStorage.getItem('setting') != null) {
+      setSetting(JSON.parse(localStorage.getItem('setting')));
+    }
+  };
+
   const loadGame = (slot) => {
     if (localStorage.getItem(slot) != null) {
       const loadData = JSON.parse(localStorage.getItem(slot));
@@ -158,8 +198,6 @@ const GamePlay = () => {
       return;
     }
     goToStep(nextNode);
-    console.log('currentnode:', node.type);
-    console.log('nextnode:', data.get(node.nextId).type);
     if (nextNode.type !== 'choice') {
       setTimeout(() => skipToOption(nextNode), 500);
     }
@@ -170,6 +208,21 @@ const GamePlay = () => {
       setCurrentNode(node);
     }
   };
+
+  const renderText = useMemo(
+    () => (
+      <AnimatedText
+        type="words"
+        interval={0.15 - setting.textSpeed / 1000}
+        animation={{
+          ease: 'ease',
+        }}
+      >
+        {currentDialog?.content}
+      </AnimatedText>
+    ),
+    [currentDialog?.content, setting.textSpeed]
+  );
 
   return currentNode != null ? (
     <>
@@ -211,7 +264,7 @@ const GamePlay = () => {
           {currentDialog?.character && (
             <h1>{`${currentDialog?.character?.name}:`}</h1>
           )}
-          <p>{currentDialog?.content}</p>
+          <p>{renderText}</p>
         </div>
         <div className="footer">
           <Space split={' - '}>
@@ -222,6 +275,12 @@ const GamePlay = () => {
               Bỏ qua
             </MenuButton>
             <MenuButton onClick={() => backToMenu()}>Về trang chủ</MenuButton>
+            <SaveAndLoad
+              type="Load"
+              onLoad={(slot) => {
+                loadGame(slot);
+              }}
+            />
             <SaveAndLoad type="Save" onSave={(slot) => saveGame(slot)} />
             <MenuButton disabled={isDisable} onClick={() => goToNextStep()}>
               Tiếp theo <CaretRightOutlined />

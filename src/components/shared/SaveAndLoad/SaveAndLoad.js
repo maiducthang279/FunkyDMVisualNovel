@@ -40,7 +40,14 @@ function SaveAndLoad({ onLoad, onSave, type }) {
     }
     if (onLoad && type === "Load") {
       onLoad(slot);
+      setIsModalOpen(false);
     }
+  }
+
+  const handleDeleteSaveSlot = (slot) => {
+    
+    localStorage.removeItem(slot);
+    loadDataFromLocalStorage();
   }
 
   return (
@@ -70,40 +77,50 @@ function SaveAndLoad({ onLoad, onSave, type }) {
       >
         {saveData.map((item, index) => (item ?
           (
-            <Row className="saveSlot" key={index} align="middle" onClick={() => handleClickSaveSlot(index + 1)}>
-              <Col className="screenshot" span={6}>
-                <img src={item.background} alt="background"></img>
-              </Col>
-              <Col span={16}>
-                <Row className="text">
-                  Save Slot {index + 1}
-                </Row>
-                <Row className="text">
-                  {item.dateTime}
+            <Row className="saveSlot" key={index} align="middle">
+              <Col span={22} onClick={() => handleClickSaveSlot(index + 1)}>
+                <Row>
+                  <Col className="screenshot" span={7}>
+                    <img src={item.background} alt="background"></img>
+                  </Col>
+                  <Col span={17}>
+                    <Row className="text">
+                      Save Slot {index + 1}
+                    </Row>
+                    <Row className="text">
+                      {item.dateTime}
+                    </Row>
+                  </Col>
                 </Row>
               </Col>
               <Col span={2}>
-                <MenuButton> <DeleteOutlined /> </MenuButton>
+                <MenuButton onClick={() => handleDeleteSaveSlot(index+1)}> <DeleteOutlined /> </MenuButton>
               </Col>
             </Row>
           ) :
           (
-            <Row className="saveSlot" key={index} align="middle" onClick={() => handleClickSaveSlot(index + 1)}>
-              <Col className="screenshot" span={6}>
-                <div className="emtpy_screenshot">
-                  Empty Slot
-                </div>
-              </Col>
-              <Col span={16}>
-                <Row className="text">
-                  Save Slot {index + 1}
-                </Row>
-                <Row className="text">
-                  Empty Slot
+            <Row className="saveSlot" key={index} align="middle">
+              <Col span={22} onClick={() => handleClickSaveSlot(index + 1)}>
+                <Row >
+                  <Col className="screenshot" span={7}>
+                    <div className="emtpy_screenshot">
+                      Empty Slot
+                    </div>
+                  </Col>
+                  <Col span={17}>
+                    <Row className="text">
+                      Save Slot {index + 1}
+                    </Row>
+                    <Row className="text">
+                      Empty Slot
+                    </Row>
+                  </Col>
                 </Row>
               </Col>
               <Col span={2}>
-                <MenuButton> <DeleteOutlined /> </MenuButton>
+                <div>
+                  <MenuButton onClick={() => handleDeleteSaveSlot(index+1)}> <DeleteOutlined /> </MenuButton>
+                </div>
               </Col>
             </Row>
           )

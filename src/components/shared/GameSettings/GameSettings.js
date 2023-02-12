@@ -1,28 +1,35 @@
-import React, { useState } from 'react';
-import { Modal, Col, Slider, Divider, Space, Row } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Modal, Col, Slider, Divider, Space, Row, Form } from 'antd';
 import './GameSettings.scss';
 import { SettingFilled } from '@ant-design/icons';
 import { MenuButton } from '../Button';
 
 const GameSettings = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isText, setIsText] = useState(true);
+  const [form] = Form.useForm();
+  const [setting,setSetting] = useState({ textSpeed: 50, music: 100, sFX: 100, voice: 100 })
+
+  useEffect(() => {
+    loadSetting();
+  }, []);
 
   const showModal = () => {
     setIsModalOpen(true);
   };
 
-  const handleCancel = () => {
+  const onFinish =(value) => {
+    localStorage.setItem('setting',JSON.stringify(value));
+  }
+  const handleSummit = () =>{
+    form.submit();
     setIsModalOpen(false);
-  };
+  }
 
-  const showText = () => {
-    setIsText(false);
-  };
-
-  const showSound = () => {
-    setIsText(true);
-  };
+  const loadSetting = () => {
+    if (localStorage.getItem("setting") != null) {
+      setSetting(JSON.parse(localStorage.getItem("setting")));
+    }
+  }
 
   return (
     <>
@@ -30,27 +37,29 @@ const GameSettings = () => {
       <Modal
         centered
         open={isModalOpen}
-        onCancel={handleCancel}
-        bodyStyle={{height: 250}}
+        bodyStyle={{ height: 350 }}
         footer={[
-          <MenuButton key={'ok'} onClick={handleCancel}>
+          <MenuButton key={'ok'} onClick={handleSummit}>
             Xong
           </MenuButton>,
         ]}
       >
         <div className="modal-container">
-          <Col span={24}>
-            <h1 className="title">
-              <SettingFilled /> Cài Đặt <SettingFilled />
-            </h1>
-            <div className="center">
-              <Space split={<Divider type="vertical" className="split" />}>
-                <MenuButton onClick={showSound}>Âm Thanh</MenuButton>
-                <MenuButton onClick={showText}>Chữ</MenuButton>
-              </Space>
-            </div>
-          </Col>
-          {isText ? (
+          <Form 
+          initialValues={setting}
+          onFinish={onFinish}
+          form={form}
+          >
+            <Col span={24}>
+              <h1 className="title">
+                <SettingFilled /> Cài Đặt <SettingFilled />
+              </h1>
+              <div className="center">
+                <Space split={<Divider type="vertical" className="split" />}>
+                  <MenuButton>Âm Thanh</MenuButton>
+                </Space>
+              </div>
+            </Col>
             <Row>
               <Col span={24}>
                 <Row align="middle">
@@ -58,7 +67,9 @@ const GameSettings = () => {
                     Nhạc nền
                   </Col>
                   <Col className="options" span={18}>
-                    <Slider className="slider" defaultValue={100} />
+                    <Form.Item className="slider" name="music">
+                      <Slider />
+                    </Form.Item>
                   </Col>
                 </Row>
               </Col>
@@ -68,7 +79,9 @@ const GameSettings = () => {
                     Âm Thanh
                   </Col>
                   <Col className="options" span={18}>
-                    <Slider className="slider" defaultValue={100} />
+                    <Form.Item className="slider" name="sFX">
+                      <Slider />
+                    </Form.Item>
                   </Col>
                 </Row>
               </Col>
@@ -78,12 +91,20 @@ const GameSettings = () => {
                     Giọng nói
                   </Col>
                   <Col className="options" span={18}>
-                    <Slider className="slider" defaultValue={100} />
+                    <Form.Item className="slider" name="voice">
+                      <Slider />
+                    </Form.Item>
                   </Col>
                 </Row>
               </Col>
+              <Col span={24}>
+                <div className="center">
+                  <Space split={<Divider type="vertical" className="split" />}>
+                    <MenuButton>Chữ</MenuButton>
+                  </Space>
+                </div>
+              </Col>
             </Row>
-          ) : (
             <Row>
               <Col span={24}>
                 <Row align="middle">
@@ -91,12 +112,14 @@ const GameSettings = () => {
                     Tốc độ chữ
                   </Col>
                   <Col className="options" span={18}>
-                    <Slider className="slider" defaultValue={100} />
+                    <Form.Item className="slider" name="textSpeed">
+                      <Slider min={1} />
+                    </Form.Item>
                   </Col>
                 </Row>
               </Col>
             </Row>
-          )}
+          </Form>
         </div>
       </Modal>
     </>
