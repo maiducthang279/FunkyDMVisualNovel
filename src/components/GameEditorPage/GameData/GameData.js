@@ -1,6 +1,6 @@
-import { Button, Col, Drawer, Form, Row } from 'antd';
+import { Button, Drawer, Form } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { Layer, Rect, Stage } from 'react-konva';
+import { Layer, Stage } from 'react-konva';
 import { useRecoilState } from 'recoil';
 import { useWindowSize } from '../../../hook/useWindowSize';
 import { currentEditedSceneState } from '../../../routes/store';
@@ -11,11 +11,7 @@ import './GameData.scss';
 import ContextMenu from '../../shared/ContextMenu';
 import GameNodeForm from './GameNodeForm';
 import GameNodeLine from './GameNodeLine';
-import {
-  checkNodeHasLink,
-  createLine,
-  getChildrenNodeIds,
-} from '../createTree.util';
+import { checkNodeHasLink, createLine } from '../createTree.util';
 import * as _ from 'lodash';
 import { makeNewNode } from '../gameEditor.util';
 
@@ -66,7 +62,6 @@ const GameData = () => {
   const [currentScene, setCurrentScene] = useRecoilState(
     currentEditedSceneState
   );
-  const [isOpenSidebar, setIsOpenSidebar] = useState(false);
   const [listNode, setListNode] = useState([]);
   const [listLine, setListLine] = useState([]);
   const [currentNode, setCurrentNode] = useState(null);

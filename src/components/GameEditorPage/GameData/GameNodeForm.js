@@ -3,7 +3,7 @@ import {
   MinusCircleOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
-import { Button, Divider, Form, Input, Row, Select, Space, Tag } from 'antd';
+import { Button, Divider, Form, Input, Select, Space, Tag } from 'antd';
 import React, { useEffect, useMemo } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
@@ -11,7 +11,6 @@ import {
   currentEditedSceneState,
 } from '../../../routes/store';
 import { getColor } from '../createTree.util';
-import { EVENT_TYPES } from '../gameEditor.util';
 
 import './GameData.scss';
 import GameEventForm from './GameEventForm/GameEventForm';
