@@ -109,11 +109,16 @@ export const mockGames = [
 
 export const mockData = [
   {
+    id: 'root',
+    name: 'root',
+    nextId: 0,
+  },
+  {
     id: 0,
     type: 'event',
     eventType: 'Set Background',
     params: {
-      backgroundImage:
+      backgroundUrl:
         'https://cdnb.artstation.com/p/assets/images/images/052/085/069/large/nils-firas-living-room-render-v001.jpg?1658914986',
     },
     nextId: 1,
@@ -123,9 +128,9 @@ export const mockData = [
     type: 'event',
     eventType: 'Set Character',
     params: {
-      id: 0,
-      image: cat1,
-      position: 'left',
+      characterId: 0,
+      characterImage: cat1,
+      characterPosition: 'left',
     },
     nextId: 2,
   },
@@ -134,9 +139,9 @@ export const mockData = [
     type: 'event',
     eventType: 'Set Character',
     params: {
-      id: 1,
-      image: cat2,
-      position: 'right',
+      characterId: 1,
+      characterImage: cat2,
+      characterPosition: 'right',
     },
     nextId: 3,
   },

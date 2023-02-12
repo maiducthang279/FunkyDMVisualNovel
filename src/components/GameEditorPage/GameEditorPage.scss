@@ -1,14 +1,32 @@
+@import '../../style/variable.scss';
+
 .game_editor_form_container {
   position: relative;
   .action {
     position: absolute;
+    padding: 0.5rem;
     z-index: 1;
-    & > * {
-      padding: 0.5rem;
-    }
     &.right {
       right: 0;
     }
+    .divider {
+      border-bottom: 1px solid #cccccc;
+    }
+  }
+}
+.main {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+.main_menu_button {
+  cursor: pointer;
+  padding: 0 1rem;
+  box-sizing: border-box;
+
+  &:hover {
+    color: $colorPrimary;
+    background-color: #00000008;
   }
 }
 .text_editor {
