@@ -122,7 +122,7 @@ const GameScenes = () => {
       </Row>
       <br />
       <div>
-        <Collapse accordion defaultActiveKey={currentScene.id}>
+        <Collapse accordion defaultActiveKey={currentScene?.id}>
           {scenes.map((scene) => (
             <Collapse.Panel
               header={`${scene.name}${
