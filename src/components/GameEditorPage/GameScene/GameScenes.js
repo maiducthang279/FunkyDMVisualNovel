@@ -1,4 +1,10 @@
-import { EditOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
+import {
+  CaretRightOutlined,
+  EditOutlined,
+  PauseOutlined,
+  PlusOutlined,
+  SaveOutlined,
+} from '@ant-design/icons';
 import { Button, Col, Collapse, Divider, Row, Space, Typography } from 'antd';
 import React, { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -6,6 +12,7 @@ import { addNewScene, deleteScene, updateScene } from '.';
 import {
   currentEditedGameState,
   currentEditedSceneState,
+  isPlayingState,
   scenesState,
 } from '../../../routes/store';
 import LoadingEffectIcon from '../../shared/LoadingEffectIcon';
@@ -16,6 +23,7 @@ import GameScenesDelete from './GameScenesDelete';
 const { Paragraph } = Typography;
 
 const GameScenes = () => {
+  const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
   const game = useRecoilValue(currentEditedGameState);
   const [scenes, setScenes] = useRecoilState(scenesState);
   const [currentScene, setCurrentScene] = useRecoilState(
@@ -95,6 +103,9 @@ const GameScenes = () => {
       setCurrentScene(scene);
     }
   };
+  const handlePlayScene = () => {
+    setIsPlaying(!isPlaying);
+  };
 
   return (
     <div className="game_scenes">
@@ -136,19 +147,31 @@ const GameScenes = () => {
               <Row justify={'end'}>
                 <Space split={<Divider type="vertical" />}>
                   {currentScene.id === scene.id ? (
-                    <Button
-                      type="link"
-                      size="small"
-                      icon={
-                        <LoadingEffectIcon
-                          isLoading={isLoading}
-                          icon={<SaveOutlined />}
-                        ></LoadingEffectIcon>
-                      }
-                      onClick={() => handleSaveScene()}
-                    >
-                      Save
-                    </Button>
+                    <>
+                      <Button
+                        type="link"
+                        size="small"
+                        icon={
+                          isPlaying ? <PauseOutlined /> : <CaretRightOutlined />
+                        }
+                        onClick={() => handlePlayScene()}
+                      >
+                        {isPlaying ? 'Stop' : 'Play'}
+                      </Button>
+                      <Button
+                        type="link"
+                        size="small"
+                        icon={
+                          <LoadingEffectIcon
+                            isLoading={isLoading}
+                            icon={<SaveOutlined />}
+                          ></LoadingEffectIcon>
+                        }
+                        onClick={() => handleSaveScene()}
+                      >
+                        Save
+                      </Button>
+                    </>
                   ) : (
                     <>
                       <GameScenesDelete

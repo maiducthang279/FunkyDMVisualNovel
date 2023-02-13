@@ -3,7 +3,7 @@ import {
   MinusCircleOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
-import { Button, Divider, Form, Input, Select, Space, Tag } from 'antd';
+import { Button, Divider, Form, Input, Select, Space, Switch, Tag } from 'antd';
 import React, { useEffect, useMemo } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
@@ -19,6 +19,7 @@ const defaultOptions = [{ value: '', label: 'None' }];
 
 const GameNodeForm = ({ form, node, onFinish }) => {
   const characterIdValue = Form.useWatch('characterId', form);
+  const isCustomName = Form.useWatch('isCustomName', form);
   const [currentScene] = useRecoilState(currentEditedSceneState);
   const characters = useRecoilValue(charactersState);
   const nextNodeOptions = useMemo(() => {
@@ -48,10 +49,7 @@ const GameNodeForm = ({ form, node, onFinish }) => {
   useEffect(() => {
     if (characterIdValue === '') {
       form.setFieldValue('characterName', '');
-    } else if (
-      characterIdValue != null &&
-      form.getFieldValue('characterName') === ''
-    ) {
+    } else if (characterIdValue != null && !isCustomName) {
       const newName =
         characters.find(({ id }) => id === characterIdValue)?.name ?? '';
       if (newName !== '') {
@@ -59,7 +57,7 @@ const GameNodeForm = ({ form, node, onFinish }) => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [characterIdValue]);
+  }, [characterIdValue, isCustomName]);
 
   if (!node) {
     return null;
@@ -117,10 +115,33 @@ const GameNodeForm = ({ form, node, onFinish }) => {
                 options={characterOptions}
               ></Select>
             </Form.Item>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'end',
+                alignItems: 'center',
+              }}
+            >
+              <Space align="center">
+                Custom name
+                <Form.Item
+                  style={{ margin: '0' }}
+                  name={'isCustomName'}
+                  valuePropName="checked"
+                >
+                  <Switch size="small" />
+                </Form.Item>
+              </Space>
+            </div>
+
             <Form.Item name={'characterName'}>
               <Input
                 placeholder="Chacracter display name"
-                disabled={characterIdValue == null || characterIdValue === ''}
+                disabled={
+                  characterIdValue == null ||
+                  characterIdValue === '' ||
+                  !isCustomName
+                }
               />
             </Form.Item>
           </>
