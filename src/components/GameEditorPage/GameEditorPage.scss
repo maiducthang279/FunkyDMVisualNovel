@@ -18,6 +18,12 @@
   position: relative;
   width: 100vw;
   height: 100vh;
+  &.hide {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+  }
 }
 .main_menu_button {
   cursor: pointer;

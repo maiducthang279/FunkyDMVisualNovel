@@ -23,7 +23,9 @@ import {
   backgroundsState,
   scenesState,
   currentEditedSceneState,
+  isPlayingState,
 } from '../../routes/store';
+import GamePlayScene from '../GamePlay/GamePlayScene';
 import LoadingEffectIcon from '../shared/LoadingEffectIcon';
 import GameBackgrounds from './GameBackground';
 import GameCharacters from './GameCharacter';
@@ -45,6 +47,8 @@ const GameEditorPage = () => {
   const loaderData = useLoaderData();
 
   const [metadataForm] = Form.useForm();
+
+  const [isPlaying] = useRecoilState(isPlayingState);
 
   const [game, setGame] = useRecoilState(currentEditedGameState);
   const [, setProject] = useRecoilState(currentEditedGameProjectState);
@@ -197,9 +201,14 @@ const GameEditorPage = () => {
           />
         </Tooltip>
       </Space>
-      <div className="main">
+      <div className={`main ${isPlaying ? 'hide' : ''}`}>
         <GameData />
       </div>
+      {isPlaying && (
+        <div className="main">
+          <GamePlayScene currentScene={currentScene} />
+        </div>
+      )}
       <Drawer
         title="Main menu"
         placement="left"

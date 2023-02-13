@@ -55,3 +55,8 @@ export const scenesState = atom({
   key: 'scenes',
   default: [],
 });
+
+export const isPlayingState = atom({
+  key: 'isPlaying',
+  default: false,
+});
