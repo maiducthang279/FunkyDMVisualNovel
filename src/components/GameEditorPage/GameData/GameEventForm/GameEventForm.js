@@ -32,14 +32,12 @@ const GameEventForm = ({ form }) => {
           'characterImage',
         ]);
         if (
-          !currentSelected.images.some(
-            (image, index) => `${image.url}?${index}` === currentImageUrl
-          )
+          !currentSelected.images.some((image) => image.url === currentImageUrl)
         ) {
           form.setFieldValue(
             ['params', 'characterImage'],
             currentSelected.images[0]?.url
-              ? `${currentSelected.images[0]?.url}?${0}`
+              ? currentSelected.images[0]?.url
               : undefined
           );
         }
@@ -59,7 +57,7 @@ const GameEventForm = ({ form }) => {
             <Select placeholder="Background">
               {backgrounds.map((background) => (
                 <Option
-                  value={`${background.url}?${background.id}`}
+                  value={background.url}
                   label={background.name}
                   key={background.id}
                 >
@@ -125,11 +123,7 @@ const GameEventForm = ({ form }) => {
               >
                 <Select placeholder="Display image">
                   {selectedCharacter.images.map((image, index) => (
-                    <Option
-                      value={`${image.url}?${index}`}
-                      label={image.name}
-                      key={index}
-                    >
+                    <Option value={image.url} label={image.name} key={index}>
                       <Row gutter={[6, 6]}>
                         <Col span={6}>
                           <Image
