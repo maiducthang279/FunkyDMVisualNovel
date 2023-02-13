@@ -50,6 +50,9 @@ const GameScenes = () => {
     };
     addNewScene(newScene).then((result) => {
       setScenes([...scenes, { id: result.id, ...newScene }]);
+      if (!currentScene) {
+        setCurrentScene(currentScene);
+      }
     });
   };
   const handleChangeSceneName = (sceneId, value) => {
@@ -122,78 +125,85 @@ const GameScenes = () => {
       </Row>
       <br />
       <div>
-        <Collapse accordion defaultActiveKey={currentScene?.id}>
-          {scenes.map((scene) => (
-            <Collapse.Panel
-              header={`${scene.name}${
-                currentScene.id === scene.id ? ' - Editing ' : ''
-              }`}
-              key={scene.id}
-            >
-              <Row>
-                <Paragraph>
-                  <b>Name:&nbsp;</b>
-                </Paragraph>
-                <Paragraph
-                  style={{ flexGrow: 1 }}
-                  editable={{
-                    onChange: (value) => handleChangeSceneName(scene.id, value),
-                  }}
-                >
-                  {scene.name}
-                </Paragraph>
-              </Row>
-              <Divider style={{ margin: '0.5rem' }} />
-              <Row justify={'end'}>
-                <Space split={<Divider type="vertical" />}>
-                  {currentScene.id === scene.id ? (
-                    <>
-                      <Button
-                        type="link"
-                        size="small"
-                        icon={
-                          isPlaying ? <PauseOutlined /> : <CaretRightOutlined />
-                        }
-                        onClick={() => handlePlayScene()}
-                      >
-                        {isPlaying ? 'Stop' : 'Play'}
-                      </Button>
-                      <Button
-                        type="link"
-                        size="small"
-                        icon={
-                          <LoadingEffectIcon
-                            isLoading={isLoading}
-                            icon={<SaveOutlined />}
-                          ></LoadingEffectIcon>
-                        }
-                        onClick={() => handleSaveScene()}
-                      >
-                        Save
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <GameScenesDelete
-                        id={scene.id}
-                        name={scene.name}
-                        onSuccess={handleDeleteScene}
-                      ></GameScenesDelete>
-                      <Button
-                        type="link"
-                        size="small"
-                        icon={<EditOutlined />}
-                        onClick={() => handleSelecteScene(scene)}
-                      >
-                        Edit
-                      </Button>
-                    </>
-                  )}
-                </Space>
-              </Row>
-            </Collapse.Panel>
-          ))}
-        </Collapse>
+        {currentScene && (
+          <Collapse accordion defaultActiveKey={currentScene.id}>
+            {scenes.map((scene) => (
+              <Collapse.Panel
+                header={`${scene.name}${
+                  currentScene.id === scene.id ? ' - Editing ' : ''
+                }`}
+                key={scene.id}
+              >
+                <Row>
+                  <Paragraph>
+                    <b>Name:&nbsp;</b>
+                  </Paragraph>
+                  <Paragraph
+                    style={{ flexGrow: 1 }}
+                    editable={{
+                      onChange: (value) =>
+                        handleChangeSceneName(scene.id, value),
+                    }}
+                  >
+                    {scene.name}
+                  </Paragraph>
+                </Row>
+                <Divider style={{ margin: '0.5rem' }} />
+                <Row justify={'end'}>
+                  <Space split={<Divider type="vertical" />}>
+                    {currentScene.id === scene.id ? (
+                      <>
+                        <Button
+                          type="link"
+                          size="small"
+                          icon={
+                            isPlaying ? (
+                              <PauseOutlined />
+                            ) : (
+                              <CaretRightOutlined />
+                            )
+                          }
+                          onClick={() => handlePlayScene()}
+                        >
+                          {isPlaying ? 'Stop' : 'Play'}
+                        </Button>
+                        <Button
+                          type="link"
+                          size="small"
+                          icon={
+                            <LoadingEffectIcon
+                              isLoading={isLoading}
+                              icon={<SaveOutlined />}
+                            ></LoadingEffectIcon>
+                          }
+                          onClick={() => handleSaveScene()}
+                        >
+                          Save
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <GameScenesDelete
+                          id={scene.id}
+                          name={scene.name}
+                          onSuccess={handleDeleteScene}
+                        ></GameScenesDelete>
+                        <Button
+                          type="link"
+                          size="small"
+                          icon={<EditOutlined />}
+                          onClick={() => handleSelecteScene(scene)}
+                        >
+                          Edit
+                        </Button>
+                      </>
+                    )}
+                  </Space>
+                </Row>
+              </Collapse.Panel>
+            ))}
+          </Collapse>
+        )}
       </div>
     </div>
   );

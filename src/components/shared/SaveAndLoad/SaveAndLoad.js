@@ -59,6 +59,7 @@ function SaveAndLoad({ onLoad, onSave, type }) {
         <MenuButton onClick={showModal}>Lưu</MenuButton>
       )}
       <Modal
+        className="save_load_dialog"
         centered
         width={800}
         bodyStyle={{ height: 500, overflowY: 'scroll' }}
