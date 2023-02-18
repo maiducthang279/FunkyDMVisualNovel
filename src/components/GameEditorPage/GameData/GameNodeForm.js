@@ -95,6 +95,8 @@ const GameNodeForm = ({ form, node, onFinish }) => {
             bordered={false}
             suffix={<EditOutlined />}
             readOnly={node.type === 'root'}
+            onBlur={() => form.submit()}
+            onPressEnter={() => form.submit()}
           />
         </Form.Item>
         {['dialog', 'choice'].includes(node.type) && (
@@ -102,7 +104,12 @@ const GameNodeForm = ({ form, node, onFinish }) => {
             name={'content'}
             rules={[{ max: 5000, message: 'Maximum 150 characters' }]}
           >
-            <Input.TextArea placeholder="Input content here" autoSize />
+            <Input.TextArea
+              placeholder="Input content here"
+              autoSize
+              onBlur={() => form.submit()}
+              onPressEnter={() => form.submit()}
+            />
           </Form.Item>
         )}
         {node.type === 'dialog' && (
@@ -113,6 +120,7 @@ const GameNodeForm = ({ form, node, onFinish }) => {
                 showSearch
                 placeholder="Character"
                 options={characterOptions}
+                onChange={() => form.submit()}
               ></Select>
             </Form.Item>
             <div
@@ -142,6 +150,8 @@ const GameNodeForm = ({ form, node, onFinish }) => {
                   characterIdValue === '' ||
                   !isCustomName
                 }
+                onBlur={() => form.submit()}
+                onPressEnter={() => form.submit()}
               />
             </Form.Item>
           </>
@@ -164,6 +174,8 @@ const GameNodeForm = ({ form, node, onFinish }) => {
                         <Input.TextArea
                           placeholder="Content"
                           autoSize
+                          onBlur={() => form.submit()}
+                          onPressEnter={() => form.submit()}
                         ></Input.TextArea>
                       </Form.Item>
                       <Form.Item {...restField} name={[name, 'nextId']}>
@@ -171,6 +183,7 @@ const GameNodeForm = ({ form, node, onFinish }) => {
                           showSearch
                           placeholder="Node"
                           options={nextNodeOptions}
+                          onChange={() => form.submit()}
                         ></Select>
                       </Form.Item>
                     </div>
@@ -212,6 +225,7 @@ const GameNodeForm = ({ form, node, onFinish }) => {
                 filterOption={(input, option) =>
                   (option?.label ?? '').includes(input)
                 }
+                onChange={() => form.submit()}
               ></Select>
             </Form.Item>
           </>

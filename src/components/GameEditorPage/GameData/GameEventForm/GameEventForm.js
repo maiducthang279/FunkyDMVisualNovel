@@ -54,7 +54,7 @@ const GameEventForm = ({ form }) => {
             name={['params', 'backgroundUrl']}
             rules={[{ required: true, message: 'Can not be empty!' }]}
           >
-            <Select placeholder="Background">
+            <Select placeholder="Background" onChange={() => form.submit()}>
               {backgrounds.map((background) => (
                 <Option
                   value={background.url}
@@ -89,7 +89,7 @@ const GameEventForm = ({ form }) => {
               name={['params', 'characterId']}
               rules={[{ required: true, message: 'Can not be empty!' }]}
             >
-              <Select placeholder="Character">
+              <Select placeholder="Character" onChange={() => form.submit()}>
                 {characters.map((character) => (
                   <Option
                     value={character.id}
@@ -121,7 +121,10 @@ const GameEventForm = ({ form }) => {
                 name={['params', 'characterImage']}
                 rules={[{ required: true, message: 'Can not be empty!' }]}
               >
-                <Select placeholder="Display image">
+                <Select
+                  placeholder="Display image"
+                  onChange={() => form.submit()}
+                >
                   {selectedCharacter.images.map((image, index) => (
                     <Option value={image.url} label={image.name} key={index}>
                       <Row gutter={[6, 6]}>
@@ -155,6 +158,7 @@ const GameEventForm = ({ form }) => {
                   { value: 'left', label: 'Left' },
                   { value: 'right', label: 'Right' },
                 ]}
+                onChange={() => form.submit()}
               ></Select>
             </Form.Item>
           </>
@@ -173,6 +177,7 @@ const GameEventForm = ({ form }) => {
                   value: scene.id,
                   label: scene.name,
                 }))}
+              onChange={() => form.submit()}
             ></Select>
           </Form.Item>
         );
@@ -189,6 +194,7 @@ const GameEventForm = ({ form }) => {
           placeholder="Event"
           options={EVENT_TYPES}
           rules={[{ required: true, message: 'Can not be empty!' }]}
+          onChange={() => form.submit()}
         ></Select>
       </Form.Item>
       {renderForm()}

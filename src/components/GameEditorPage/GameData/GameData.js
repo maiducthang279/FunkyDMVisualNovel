@@ -1,4 +1,4 @@
-import { Button, Drawer, Form } from 'antd';
+import { Drawer, Form } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Layer, Stage } from 'react-konva';
 import { useRecoilState } from 'recoil';
@@ -355,11 +355,6 @@ const GameData = () => {
         mask={false}
         open={!!currentNode}
         width={(width || window.innerWidth) >= 425 ? 425 : '100%'}
-        extra={
-          <Button type="primary" onClick={() => nodeForm.submit()}>
-            Save
-          </Button>
-        }
       >
         <GameNodeForm
           form={nodeForm}
