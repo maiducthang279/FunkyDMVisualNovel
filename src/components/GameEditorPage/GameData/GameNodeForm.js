@@ -137,7 +137,7 @@ const GameNodeForm = ({ form, node, onFinish }) => {
                   name={'isCustomName'}
                   valuePropName="checked"
                 >
-                  <Switch size="small" />
+                  <Switch size="small" onChange={() => form.submit()} />
                 </Form.Item>
               </Space>
             </div>
