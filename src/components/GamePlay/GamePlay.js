@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Layer, Stage } from 'react-konva';
 import { useWindowSize } from '../../hook/useWindowSize';
 import KonvaBackground from '../shared/KonvaComponents/KonvaBackground';
@@ -11,10 +11,10 @@ import { CaretRightOutlined } from '@ant-design/icons';
 import ChoiceModal from '../shared/ChoiceModal';
 import SaveAndLoad from '../shared/SaveAndLoad/SaveAndLoad';
 import moment from 'moment';
-import AnimatedText from 'react-animated-text-content';
 import { sceneLoader } from '.';
 import Loading from '../shared/Loading';
 import { convertNodeToData } from '../../services/dataService';
+import AnimatedContent from '../shared/AnimatedContent';
 
 const GamePlay = ({ game, loadGameSlot, onBack }) => {
   const { width, height } = useWindowSize();
@@ -32,6 +32,9 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
   const [background, setBackground] = useState(null);
 
   const [isDisable, setIsDisable] = useState(false);
+  const [isShowAll, setIsShowAll] = useState(false);
+  const [showAllText, setShowAllText] = useState(false);
+  const [isSkipText, setIsSkipText] = useState(false);
 
   const [setting, setSetting] = useState({
     textSpeed: 50,
@@ -54,7 +57,7 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentNode]
+    [currentNode, isShowAll]
   );
 
   useEffect(() => {
@@ -115,6 +118,7 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
   }, [currentNode]);
 
   const handleDialog = useCallback((currentNodeData) => {
+    setShowAllText(false);
     setCurrentDialog(currentNodeData);
   }, []);
 
@@ -183,7 +187,11 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
 
   const goToNextStep = () => {
     if (currentNode.nextId != null && currentNode.nextId !== '') {
-      setCurrentNode(data.get(currentNode.nextId));
+      if (currentNode.type === 'dialog' && !isShowAll) {
+        setShowAllText(true);
+      } else {
+        setCurrentNode(data.get(currentNode.nextId));
+      }
     }
   };
 
@@ -231,11 +239,15 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
   const skipToOption = (node) => {
     const nextNode = data.get(node.nextId);
     if (!nextNode) {
+      setIsSkipText(false);
       return;
     }
+    setIsSkipText(true);
     goToStep(nextNode);
     if (nextNode.type !== 'choice') {
-      setTimeout(() => skipToOption(nextNode), 500);
+      setTimeout(() => skipToOption(nextNode), 250);
+    } else {
+      setIsSkipText(false);
     }
   };
 
@@ -244,21 +256,6 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
       setCurrentNode(node);
     }
   };
-
-  const renderText = useMemo(
-    () => (
-      <AnimatedText
-        type="words"
-        interval={0.15 - setting.textSpeed / 1000}
-        animation={{
-          ease: 'ease',
-        }}
-      >
-        {currentDialog?.content}
-      </AnimatedText>
-    ),
-    [currentDialog?.content, setting.textSpeed]
-  );
 
   if (isLoading) {
     return <Loading />;
@@ -304,7 +301,18 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
           {currentDialog?.characterName && (
             <h1>{`${currentDialog?.characterName}:`}</h1>
           )}
-          <div className="paragraph">{renderText}</div>
+          <div className="paragraph">
+            {isSkipText ? (
+              currentDialog?.content
+            ) : (
+              <AnimatedContent
+                content={currentDialog?.content}
+                interval={10 + (100 - setting.textSpeed) * 0.4}
+                showAllText={showAllText}
+                onDisplayStatusChange={(stt) => setIsShowAll(stt)}
+              ></AnimatedContent>
+            )}
+          </div>
         </div>
         <div className="footer">
           <Space split={' - '}>

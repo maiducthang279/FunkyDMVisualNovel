@@ -21,7 +21,7 @@ const KonvaCharacter = ({ url, isLeft, isMain, ...rest }) => {
       imageRef.current.to({
         scaleX: isMain ? 1.15 : 1,
         scaleY: isMain ? 1.15 : 1,
-        duration: 0.2,
+        duration: 0.1,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

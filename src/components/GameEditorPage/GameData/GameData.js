@@ -303,7 +303,7 @@ const GameData = () => {
     return null;
   }
   return (
-    <div className="stage_container">
+    <div className="stage_container" key={currentScene.id}>
       <Stage
         width={getStageSize().width}
         height={getStageSize().height}
