@@ -29,6 +29,7 @@ export const makeNewNode = (type, data) => {
         nextId: '',
         characterId: '',
         characterName: '',
+        isCustomName: false,
       };
       break;
     case 'choice':
