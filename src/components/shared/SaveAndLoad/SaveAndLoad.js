@@ -16,6 +16,7 @@ function SaveAndLoad({ onLoad, onSave, gameId = '', type, children }) {
 
   useEffect(() => {
     loadDataFromLocalStorage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadDataFromLocalStorage = () => {
