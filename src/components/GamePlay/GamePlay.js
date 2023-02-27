@@ -207,7 +207,11 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
   };
 
   const goToNextStep = () => {
-    if (currentNode.nextId != null && currentNode.nextId !== '') {
+    if (
+      currentNode != null &&
+      currentNode?.nextId != null &&
+      currentNode?.nextId !== ''
+    ) {
       if (currentNode.type === 'dialog' && !isShowAll) {
         setShowAllText(true);
       } else {
