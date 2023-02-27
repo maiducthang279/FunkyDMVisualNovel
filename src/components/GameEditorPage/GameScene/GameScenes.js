@@ -101,7 +101,9 @@ const GameScenes = () => {
   };
   const handleSelecteScene = (scene) => {
     if (
-      window.confirm('Are you save scene before starting edit another scene?')
+      window.confirm(
+        'Have you saved the current scene before starting to edit another one?'
+      )
     ) {
       setCurrentScene(scene);
     }

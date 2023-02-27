@@ -3,6 +3,7 @@ import {
   ArrowLeftOutlined,
   CloudDownloadOutlined,
   CloudUploadOutlined,
+  ExportOutlined,
   MenuOutlined,
   PictureOutlined,
   SaveOutlined,
@@ -10,6 +11,7 @@ import {
   TeamOutlined,
 } from '@ant-design/icons';
 import { Button, Col, Drawer, Form, Row, Space, Tooltip } from 'antd';
+import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
@@ -27,6 +29,7 @@ import {
 } from '../../routes/store';
 import GamePlayScene from '../GamePlay/GamePlayScene';
 import LoadingEffectIcon from '../shared/LoadingEffectIcon';
+import { downloadObjectAsJson } from '../utils/utils';
 import GameBackgrounds from './GameBackground';
 import GameCharacters from './GameCharacter';
 import GameData from './GameData/GameData';
@@ -146,6 +149,16 @@ const GameEditorPage = () => {
         setFormState(FORM_STATUS.SAVED);
       });
   };
+  const handleExport = () => {
+    const exportedData = {
+      metadata: metadataForm.getFieldsValue(),
+      scene: currentScene,
+    };
+    downloadObjectAsJson(
+      exportedData,
+      `${game.name}-${moment().format()}-export-data`
+    );
+  };
   const handleGoBackHome = () => {
     window.location = '/';
   };
@@ -230,6 +243,17 @@ const GameEditorPage = () => {
                       icon={<SaveOutlined />}
                     />
                     <p>Save</p>
+                  </Space>
+                </div>
+              </Col>
+              <Col>
+                <div className="main_menu_button" onClick={handleExport}>
+                  <Space>
+                    <LoadingEffectIcon
+                      isLoading={formState === FORM_STATUS.SAVING}
+                      icon={<ExportOutlined />}
+                    />
+                    <p>Export data</p>
                   </Space>
                 </div>
               </Col>
