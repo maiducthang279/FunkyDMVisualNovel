@@ -163,6 +163,24 @@ const GameEventForm = ({ form }) => {
             </Form.Item>
           </>
         );
+      case 'Remove Character':
+        return (
+          <>
+            <Form.Item
+              name={['params', 'characterPosition']}
+              rules={[{ required: true, message: 'Can not be empty!' }]}
+            >
+              <Select
+                placeholder="Position"
+                options={[
+                  { value: 'left', label: 'Left' },
+                  { value: 'right', label: 'Right' },
+                ]}
+                onChange={() => form.submit()}
+              ></Select>
+            </Form.Item>
+          </>
+        );
       case 'Go to Next Scene':
         return (
           <Form.Item

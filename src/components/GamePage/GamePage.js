@@ -68,11 +68,14 @@ const GamePage = () => {
               </Col>
               <Col span={24}>
                 <SaveAndLoad
+                  gameId={game.id}
                   type="Load"
                   onLoad={(slot) => {
                     loadGame(slot);
                   }}
-                />
+                >
+                  Tiếp tục
+                </SaveAndLoad>
               </Col>
               <Col span={24}>
                 <MenuButton onClick={() => startGame()}>Bắt đầu</MenuButton>

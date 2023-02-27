@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Col, Row } from 'antd';
 import { MenuButton } from '../Button';
-import { DeleteOutlined } from '@ant-design/icons';
+import {
+  CloudDownloadOutlined,
+  DeleteOutlined,
+  SaveOutlined,
+} from '@ant-design/icons';
 
 import './SaveAndLoad.scss';
 
-function SaveAndLoad({ onLoad, onSave, type }) {
+function SaveAndLoad({ onLoad, onSave, gameId = '', type, children }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [saveData, setSaveData] = useState([]);
@@ -17,7 +21,7 @@ function SaveAndLoad({ onLoad, onSave, type }) {
   const loadDataFromLocalStorage = () => {
     setSaveData(
       [1, 2, 3, 4, 5, 6, 7].map((i) => {
-        const saveSlotData = localStorage.getItem(i);
+        const saveSlotData = localStorage.getItem(gameId + i);
         return saveSlotData ? JSON.parse(saveSlotData) : null;
       })
     );
@@ -37,26 +41,35 @@ function SaveAndLoad({ onLoad, onSave, type }) {
 
   const handleClickSaveSlot = (slot) => {
     if (onSave && type === 'Save') {
-      onSave(slot);
+      onSave(gameId + slot);
       loadDataFromLocalStorage();
     }
     if (onLoad && type === 'Load') {
-      onLoad(slot);
-      setIsModalOpen(false);
+      const saveSlotData = localStorage.getItem(gameId + slot);
+      if (saveSlotData) {
+        onLoad(gameId + slot);
+        setIsModalOpen(false);
+      }
     }
   };
 
   const handleDeleteSaveSlot = (slot) => {
-    localStorage.removeItem(slot);
+    localStorage.removeItem(gameId + slot);
     loadDataFromLocalStorage();
   };
 
   return (
     <>
-      {type === 'Load' ? (
-        <MenuButton onClick={showModal}>Tiếp tục</MenuButton>
+      {children ? (
+        <MenuButton onClick={showModal}>{children}</MenuButton>
+      ) : type === 'Load' ? (
+        <MenuButton onClick={showModal}>
+          <CloudDownloadOutlined />
+        </MenuButton>
       ) : (
-        <MenuButton onClick={showModal}>Lưu</MenuButton>
+        <MenuButton onClick={showModal}>
+          <SaveOutlined />
+        </MenuButton>
       )}
       <Modal
         className="save_load_dialog"

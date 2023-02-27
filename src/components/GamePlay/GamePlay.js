@@ -35,6 +35,7 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
   const [isShowAll, setIsShowAll] = useState(false);
   const [showAllText, setShowAllText] = useState(false);
   const [isSkipText, setIsSkipText] = useState(false);
+  const [isDialogHiden, setIsDialogHiden] = useState(false);
 
   const [setting, setSetting] = useState({
     textSpeed: 50,
@@ -132,6 +133,9 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
       case 'Set Character':
         initCharacter(params);
         break;
+      case 'Remove Character':
+        removeCharacter(params);
+        break;
       case 'Set Background':
         initBackground(params);
         break;
@@ -141,6 +145,7 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
       default:
         break;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const initCharacter = (params) => {
@@ -152,13 +157,28 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
       setRightCharacter(params);
     }
   };
+  const removeCharacter = (params) => {
+    const { characterPosition } = params;
+    if (characterPosition === 'left') {
+      setLeftCharacter(null);
+    }
+    if (characterPosition === 'right') {
+      setRightCharacter(null);
+    }
+  };
   const initBackground = (params) => {
     const { backgroundUrl } = params;
     setBackground(backgroundUrl);
   };
 
+  const hideDialog = (params) => {
+    const { isHidden } = params;
+    setIsDialogHiden(isHidden);
+  };
+
   const goToNextScene = (param) => {
     setIsLoading(true);
+    hideDialog({ isHidden: true });
     sceneLoader(param.nextSceneId)
       .then((res) => {
         setCurrentScene(res);
@@ -166,6 +186,7 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
         setCurrentNode(res.data.nodes[0]);
       })
       .finally(() => {
+        hideDialog({ isHidden: false });
         setIsLoading(false);
       });
   };
@@ -257,10 +278,6 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
     }
   };
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
   return currentNode != null ? (
     <>
       <Stage width={getStageSize().width} height={getStageSize().height}>
@@ -274,7 +291,7 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
           offsetX={-getStageSize().width / 2}
           offsetY={-getStageSize().height}
         >
-          {leftCharacter && (
+          {!isLoading && leftCharacter && (
             <KonvaCharacter
               url={leftCharacter.characterImage}
               isLeft={true}
@@ -284,7 +301,7 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
               }
             ></KonvaCharacter>
           )}
-          {rightCharacter && (
+          {!isLoading && rightCharacter && (
             <KonvaCharacter
               url={rightCharacter.characterImage}
               isLeft={false}
@@ -297,44 +314,53 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
         </Layer>
       </Stage>
       <div className="game_gui">
-        <div className="content">
-          {currentDialog?.characterName && (
-            <h1>{`${currentDialog?.characterName}:`}</h1>
-          )}
-          <div className="paragraph">
-            {isSkipText ? (
-              currentDialog?.content
-            ) : (
-              <AnimatedContent
-                content={currentDialog?.content}
-                interval={10 + (100 - setting.textSpeed) * 0.4}
-                showAllText={showAllText}
-                onDisplayStatusChange={(stt) => setIsShowAll(stt)}
-              ></AnimatedContent>
+        {isDialogHiden ? null : (
+          <div className="content">
+            {currentDialog?.characterName && (
+              <h1>{`${currentDialog?.characterName}:`}</h1>
             )}
+            <div className="paragraph">
+              {isSkipText ? (
+                currentDialog?.content
+              ) : (
+                <AnimatedContent
+                  content={currentDialog?.content}
+                  interval={10 + (100 - setting.textSpeed) * 0.4}
+                  showAllText={showAllText}
+                  onDisplayStatusChange={(stt) => setIsShowAll(stt)}
+                ></AnimatedContent>
+              )}
+            </div>
           </div>
-        </div>
-        <div className="footer">
-          <Space split={' - '}>
-            <MenuButton
-              disabled={isDisable}
-              onClick={() => skipToOption(currentNode)}
-            >
-              Bỏ qua
-            </MenuButton>
-            <MenuButton onClick={() => backToMenu()}>Về trang chủ</MenuButton>
-            <SaveAndLoad
-              type="Load"
-              onLoad={(slot) => {
-                loadGame(slot);
-              }}
-            />
-            <SaveAndLoad type="Save" onSave={(slot) => saveGame(slot)} />
-            <MenuButton disabled={isDisable} onClick={() => goToNextStep()}>
-              Tiếp theo <CaretRightOutlined />
-            </MenuButton>
-          </Space>
-        </div>
+        )}
+        {!isLoading ? (
+          <div className="footer">
+            <Space split={' - '}>
+              <MenuButton
+                disabled={isDisable}
+                onClick={() => skipToOption(currentNode)}
+              >
+                Tua nhanh
+              </MenuButton>
+              <MenuButton onClick={() => backToMenu()}>Về trang chủ</MenuButton>
+              <SaveAndLoad
+                gameId={game.id}
+                type="Load"
+                onLoad={(slot) => {
+                  loadGame(slot);
+                }}
+              />
+              <SaveAndLoad
+                type="Save"
+                gameId={game.id}
+                onSave={(slot) => saveGame(slot)}
+              />
+              <MenuButton disabled={isDisable} onClick={() => goToNextStep()}>
+                Tiếp theo <CaretRightOutlined />
+              </MenuButton>
+            </Space>
+          </div>
+        ) : null}
       </div>
       {currentChoice && (
         <ChoiceModal
@@ -343,8 +369,11 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
           onOptionClick={handleOptionClick}
         />
       )}
+      {isLoading ? <Loading /> : null}
     </>
-  ) : null;
+  ) : (
+    <Loading />
+  );
 };
 
 export default GamePlay;

@@ -112,6 +112,9 @@ const GamePlayScene = ({ currentScene }) => {
       case 'Set Character':
         initCharacter(params);
         break;
+      case 'Remove Character':
+        removeCharacter(params);
+        break;
       case 'Set Background':
         initBackground(params);
         break;
@@ -133,6 +136,15 @@ const GamePlayScene = ({ currentScene }) => {
     }
     if (characterPosition === 'right') {
       setRightCharacter(params);
+    }
+  };
+  const removeCharacter = (params) => {
+    const { characterPosition } = params;
+    if (characterPosition === 'left') {
+      setLeftCharacter(null);
+    }
+    if (characterPosition === 'right') {
+      setRightCharacter(null);
     }
   };
   const initBackground = (params) => {
