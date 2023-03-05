@@ -30,12 +30,14 @@ export const makeNewNode = (type, data) => {
         characterId: '',
         characterName: '',
         isCustomName: false,
+        extraProps: {},
       };
       break;
     case 'choice':
       newNode = {
         content: '',
         options: [],
+        extraProps: {},
       };
       break;
     case 'event':

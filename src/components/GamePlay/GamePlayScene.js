@@ -240,7 +240,11 @@ const GamePlayScene = ({ currentScene }) => {
         </Layer>
       </Stage>
       <div className="game_gui">
-        <div className="content">
+        <div
+          className={`content ${
+            currentDialog?.extraProps?.italic ? 'italic' : ''
+          }`}
+        >
           {currentDialog?.characterName && (
             <h1>{`${currentDialog?.characterName}:`}</h1>
           )}

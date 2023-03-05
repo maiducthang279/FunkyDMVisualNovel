@@ -319,7 +319,11 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
       </Stage>
       <div className="game_gui">
         {isDialogHiden ? null : (
-          <div className="content">
+          <div
+            className={`content ${
+              currentDialog?.extraProps?.italic ? 'italic' : ''
+            }`}
+          >
             {currentDialog?.characterName && (
               <h1>{`${currentDialog?.characterName}:`}</h1>
             )}

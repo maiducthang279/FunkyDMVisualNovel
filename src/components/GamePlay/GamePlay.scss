@@ -30,19 +30,28 @@
   .content {
     overflow: auto;
     height: 10em;
-    h1,
     p,
     .paragraph {
+      font-size: 1.75rem;
+      font-weight: 800;
       margin: 0 auto;
       padding: 0rem 2rem;
       max-width: 1024px;
+      box-sizing: border-box;
     }
     h1 {
-      font-weight: 800;
-    }
-    p,
-    .paragraph {
       font-size: 2rem;
+      font-weight: 800;
+      margin: 0 auto;
+      padding: 0rem 1rem;
+      max-width: 1024px;
+      box-sizing: border-box;
+    }
+    &.italic {
+      p,
+      .paragraph {
+        font-style: italic;
+      }
     }
   }
 

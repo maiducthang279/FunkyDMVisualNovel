@@ -3,7 +3,17 @@ import {
   MinusCircleOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
-import { Button, Divider, Form, Input, Select, Space, Switch, Tag } from 'antd';
+import {
+  Button,
+  Checkbox,
+  Divider,
+  Form,
+  Input,
+  Select,
+  Space,
+  Switch,
+  Tag,
+} from 'antd';
 import React, { useEffect, useMemo } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
@@ -114,6 +124,9 @@ const GameNodeForm = ({ form, node, onFinish }) => {
         )}
         {node.type === 'dialog' && (
           <>
+            <Form.Item name={['extraProps', 'italic']} valuePropName="checked">
+              <Checkbox onChange={() => form.submit()}>Italic</Checkbox>
+            </Form.Item>
             <Divider>Character</Divider>
             <Form.Item name={'characterId'}>
               <Select
