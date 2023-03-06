@@ -239,6 +239,9 @@ const GamePlayScene = ({ currentScene }) => {
           )}
         </Layer>
       </Stage>
+      <div className="game_info">
+        <p>Node: {currentNode.name}</p>
+      </div>
       <div className="game_gui">
         <div
           className={`content ${

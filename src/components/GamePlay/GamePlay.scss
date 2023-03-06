@@ -60,3 +60,17 @@
     justify-content: flex-end;
   }
 }
+
+.game_info {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  p {
+    border-radius: 50rem;
+    margin: 0.5rem 0;
+    padding: 0.5rem 1rem;
+    background-color: #ffffff;
+  }
+}
