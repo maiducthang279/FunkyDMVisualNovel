@@ -15,6 +15,7 @@ import { sceneLoader } from '.';
 import Loading from '../shared/Loading';
 import { convertNodeToData } from '../../services/dataService';
 import AnimatedContent from '../shared/AnimatedContent';
+import { getListImage } from '../utils/utils';
 
 const GamePlay = ({ game, loadGameSlot, onBack }) => {
   const { width, height } = useWindowSize();
@@ -23,6 +24,8 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
   const [currentScene, setCurrentScene] = useState(null);
   const [data, setData] = useState(null);
   const [currentNode, setCurrentNode] = useState(null);
+  const [listImageUrl, setListImageUrl] = useState([]);
+  const [listImage, setListImage] = useState([]);
 
   const [currentDialog, setCurrentDialog] = useState(null);
   const [currentChoice, setCurrentChoice] = useState(null);
@@ -70,6 +73,11 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
         sceneLoader(game.rootScene)
           .then((res) => {
             setCurrentScene(res);
+            return getListImage(res.data.nodes, listImageUrl, res);
+          })
+          .then(([res, newImgUrl, newImg]) => {
+            setListImage([...listImage, ...newImg]);
+            setListImageUrl([...listImageUrl, ...newImgUrl]);
             setData(convertNodeToData(res.data.nodes));
             setCurrentNode(res.data.nodes[0]);
           })
@@ -182,6 +190,11 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
     sceneLoader(param.nextSceneId)
       .then((res) => {
         setCurrentScene(res);
+        return getListImage(res.data.nodes, listImageUrl, res);
+      })
+      .then(([res, newImgUrl, newImg]) => {
+        setListImage([...listImage, ...newImg]);
+        setListImageUrl([...listImageUrl, ...newImgUrl]);
         setData(convertNodeToData(res.data.nodes));
         setCurrentNode(res.data.nodes[0]);
       })
@@ -247,6 +260,11 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
       sceneLoader(loadData.currentSceneId)
         .then((res) => {
           setCurrentScene(res);
+          return getListImage(res.data.nodes, listImageUrl, res);
+        })
+        .then(([res, newImgUrl, newImg]) => {
+          setListImage([...listImage, ...newImg]);
+          setListImageUrl([...listImageUrl, ...newImgUrl]);
           setData(convertNodeToData(res.data.nodes));
           setCurrentNode(loadData.currentNode);
           setCurrentDialog(loadData.currentDialog);

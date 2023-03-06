@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export const calculateDialogTime = (content, textSpeed) => {
   return content.split(' ').length * calculateDialogInterval(textSpeed) * 1000;
 };
@@ -15,3 +17,32 @@ export const downloadObjectAsJson = (exportObj, exportName) => {
   downloadAnchorNode.click();
   downloadAnchorNode.remove();
 };
+
+export const getListImage = async (nodes, prevImages, res) => {
+  const listImage = nodes
+    .map((node) => {
+      if (node.type === 'event') {
+        switch (node.eventType) {
+          case 'Set Character':
+            return node.params.characterImage;
+          case 'Set Background':
+            return node.params.backgroundUrl;
+          default:
+            return null;
+        }
+      }
+      return null;
+    })
+    .filter((url) => !!url);
+  const result = _.xor(listImage, prevImages);
+  const images = await Promise.all(result.map((r) => loadImage(r)));
+  return [res, result, images];
+};
+
+export const loadImage = (src) =>
+  new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
+    img.src = src;
+  });
