@@ -167,21 +167,20 @@ const GameData = () => {
   };
 
   const startEditNode = (node) => {
-    if (currentNode == null) {
-      nodeForm.setFieldsValue(node);
-      setCurrentNode(node);
-    } else {
-      const editingNode = {
-        ...currentNode,
-        ...nodeForm.getFieldsValue(),
+    nodeForm.setFieldsValue(prepareNodeForm(node));
+    setCurrentNode(node);
+  };
+
+  const prepareNodeForm = (node) => {
+    if (node?.type === 'dialog' && !node?.extraProps) {
+      return {
+        ...node,
+        extraProps: {
+          italic: false,
+        },
       };
-      if (_.isEqual(editingNode, currentNode)) {
-        nodeForm.setFieldsValue(node);
-        setCurrentNode(node);
-      } else {
-        window.alert('Please save node before switch');
-      }
     }
+    return node;
   };
 
   const handleNodeClick = () => {};
