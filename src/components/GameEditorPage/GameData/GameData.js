@@ -12,7 +12,6 @@ import ContextMenu from '../../shared/ContextMenu';
 import GameNodeForm from './GameNodeForm';
 import GameNodeLine from './GameNodeLine';
 import { checkNodeHasLink, createLine } from '../createTree.util';
-import * as _ from 'lodash';
 import { makeNewNode } from '../gameEditor.util';
 
 const createMenuItem = ({ name, key, type = 'default' }) => ({

@@ -235,7 +235,7 @@ const GameEditorPage = () => {
         >
           <Col>
             <Row style={{ flexDirection: 'column' }} justify={'start'}>
-              {/* <Col>
+              <Col>
                 <div className="main_menu_button" onClick={handleSave}>
                   <Space>
                     <LoadingEffectIcon
@@ -245,7 +245,7 @@ const GameEditorPage = () => {
                     <p>Save</p>
                   </Space>
                 </div>
-              </Col> */}
+              </Col>
               <Col>
                 <div className="main_menu_button" onClick={handleExport}>
                   <Space>
