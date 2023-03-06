@@ -47,11 +47,7 @@ const KonvaCharacter = ({ url, isLeft, isMain, ...rest }) => {
     <Image
       ref={(node) => (imageRef.current = node)}
       image={image}
-      x={
-        isLeft
-          ? -imageSize.width / 2 - width / 6
-          : imageSize.width / 2 + width / 6
-      }
+      x={isLeft ? -width / 4 : +width / 4}
       y={-padding}
       width={imageSize.width}
       height={imageSize.height}
