@@ -1,5 +1,6 @@
 import { Col, Divider, Form, Image, Row, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
+import ReactQuill from 'react-quill';
 import { useRecoilValue } from 'recoil';
 import {
   backgroundsState,
@@ -10,6 +11,7 @@ import {
 import { defaultImage } from '../../../../services/util';
 import { EVENT_TYPES } from '../../gameEditor.util';
 
+import 'react-quill/dist/quill.snow.css';
 import './GameEventForm.scss';
 const { Option } = Select;
 
@@ -197,6 +199,54 @@ const GameEventForm = ({ form }) => {
                 }))}
               onChange={() => form.submit()}
             ></Select>
+          </Form.Item>
+        );
+      case 'End Game':
+        return (
+          <Form.Item
+            name={['params', 'credit']}
+            rules={[{ required: true, message: 'Can not be empty!' }]}
+          >
+            <ReactQuill
+              theme="snow"
+              onBlur={() => form.submit()}
+              modules={{
+                toolbar: [
+                  [{ header: [] }, { font: [] }],
+                  [{ size: [] }],
+                  ['bold', 'italic', 'underline'],
+                  [
+                    { list: 'ordered' },
+                    { list: 'bullet' },
+                    { indent: '-1' },
+                    { indent: '+1' },
+                  ],
+                  ['link', 'image'],
+                  ['clean'],
+                  [
+                    { align: '' },
+                    { align: 'center' },
+                    { align: 'right' },
+                    { align: 'justify' },
+                  ],
+                ],
+              }}
+              formats={[
+                'header',
+                'font',
+                'size',
+                'color',
+                'bold',
+                'italic',
+                'underline',
+                'list',
+                'bullet',
+                'indent',
+                'link',
+                'image',
+                'align',
+              ]}
+            />
           </Form.Item>
         );
       default:

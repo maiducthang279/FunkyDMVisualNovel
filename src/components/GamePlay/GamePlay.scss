@@ -74,3 +74,45 @@
     background-color: #ffffff;
   }
 }
+
+.credit {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
+  background-color: #ffffff88;
+  .ql-align-center {
+    text-align: center;
+  }
+  .credit_content {
+    margin: auto;
+    padding: 0rem 2rem;
+    max-width: 1024px;
+    font-size: 2rem;
+    font-family: 'Amatic SC', cursive;
+    overflow: hidden;
+    p {
+      margin: 0.5rem;
+    }
+  }
+  .the_end {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 5rem;
+    font-weight: 900;
+  }
+  .credit_footer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 1rem;
+  }
+}
+
+.credit-animation {
+  transform: translateY(-100%);
+}

@@ -16,6 +16,7 @@ import Loading from '../shared/Loading';
 import { convertNodeToData } from '../../services/dataService';
 import AnimatedContent from '../shared/AnimatedContent';
 import { getListImage } from '../utils/utils';
+import DOMPurify from 'dompurify';
 
 const GamePlay = ({ game, loadGameSlot, onBack }) => {
   const { width, height } = useWindowSize();
@@ -39,6 +40,8 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
   const [showAllText, setShowAllText] = useState(false);
   const [isSkipText, setIsSkipText] = useState(false);
   const [isDialogHiden, setIsDialogHiden] = useState(false);
+  const [isEndGame, setIsEndGame] = useState(false);
+  const [credit, setCredit] = useState('');
 
   const [setting, setSetting] = useState({
     textSpeed: 50,
@@ -150,6 +153,9 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
       case 'Go to Next Scene':
         goToNextScene(params);
         break;
+      case 'End Game':
+        endGame(params);
+        break;
       default:
         break;
     }
@@ -202,6 +208,11 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
         hideDialog({ isHidden: false });
         setIsLoading(false);
       });
+  };
+
+  const endGame = (param) => {
+    setIsEndGame(true);
+    setCredit(param.credit);
   };
 
   const backToMenu = () => {
@@ -299,6 +310,41 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
       setCurrentNode(node);
     }
   };
+
+  if (isEndGame) {
+    return (
+      <>
+        <Stage width={getStageSize().width} height={getStageSize().height}>
+          <Layer
+            offsetX={-getStageSize().width / 2}
+            offsetY={-getStageSize().height}
+          >
+            {background && <KonvaBackground url={background}></KonvaBackground>}
+          </Layer>
+        </Stage>
+        <div className="credit">
+          <div
+            className="credit_content credit-animation"
+            style={{
+              transition: `transform ${
+                credit.split('<p>').length + 10
+              }s ease-in`,
+            }}
+          >
+            <div className="the_end">Kết thúc</div>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(credit),
+              }}
+            />
+          </div>
+          <div className="credit_footer">
+            <MenuButton onClick={() => backToMenu()}>Về trang chủ</MenuButton>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return currentNode != null ? (
     <>
