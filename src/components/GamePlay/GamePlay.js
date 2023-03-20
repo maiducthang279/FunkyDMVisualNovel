@@ -34,6 +34,7 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
   const [leftCharacter, setLeftCharacter] = useState(null);
   const [rightCharacter, setRightCharacter] = useState(null);
   const [background, setBackground] = useState(null);
+  const [variables, setVariables] = useState([]);
 
   const [isDisable, setIsDisable] = useState(false);
   const [isShowAll, setIsShowAll] = useState(false);
@@ -73,6 +74,12 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
     } else {
       if (game.rootScene) {
         setIsLoading(true);
+        setVariables(
+          game.variables?.map((variable) => ({
+            ...variable,
+            current: variable.default,
+          })) || []
+        );
         sceneLoader(game.rootScene)
           .then((res) => {
             setCurrentScene(res);
@@ -121,7 +128,6 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
         break;
       case 'event':
         handleEvent(currentNode);
-        goToNextStep();
         break;
       default:
         break;
@@ -138,7 +144,7 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
     setCurrentChoice(currentNodeData);
   }, []);
 
-  const handleEvent = useCallback((currentNodeData) => {
+  const handleEvent = (currentNodeData) => {
     const { eventType, params } = currentNodeData;
     switch (eventType) {
       case 'Set Character':
@@ -156,11 +162,20 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
       case 'End Game':
         endGame(params);
         break;
+      case 'Store Variable':
+        storeVariable(params);
+        break;
+      case 'Check Variable':
+        checkVariable(params, currentNodeData.options);
+        break;
       default:
         break;
     }
+    if (!(currentNode.eventType === 'Check Variable')) {
+      goToNextStep();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
 
   const initCharacter = (params) => {
     const { characterPosition } = params;
@@ -193,6 +208,7 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
   const goToNextScene = (param) => {
     setIsLoading(true);
     hideDialog({ isHidden: true });
+    setCurrentDialog(null);
     sceneLoader(param.nextSceneId)
       .then((res) => {
         setCurrentScene(res);
@@ -213,6 +229,42 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
   const endGame = (param) => {
     setIsEndGame(true);
     setCredit(param.credit);
+  };
+
+  const storeVariable = (param) => {
+    const newVariables = variables.map((variable) =>
+      variable.id === param.variableId
+        ? { ...variable, current: param.value }
+        : variable
+    );
+    setVariables(newVariables);
+  };
+
+  const checkVariable = (param, options) => {
+    const currentVariable = variables.find(
+      (variable) => variable.id === param.variableId
+    );
+    Loop: for (let i = 0; i < options.length; i++) {
+      const option = options[i];
+      switch (option.operator) {
+        case 'equal':
+          if (currentVariable.current === option.value) {
+            setCurrentNode(data.get(option.nextId));
+            // setTimeout(() => setCurrentNode(data.get(option.nextId)),0);
+            break Loop;
+          }
+          break;
+        case 'not equal':
+          if (currentVariable.current !== option.value) {
+            setCurrentNode(data.get(option.nextId));
+            // setTimeout(() => setCurrentNode(data.get(option.nextId)),0);
+            break Loop;
+          }
+          break;
+        default:
+          break;
+      }
+    }
   };
 
   const backToMenu = () => {
@@ -253,6 +305,7 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
       leftCharacter,
       rightCharacter,
       background,
+      variables,
       dateTime: moment().format('hh:mm | DD/MM/YYYY'),
     };
     localStorage.setItem(slot, JSON.stringify(saveData));
@@ -268,6 +321,7 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
     if (localStorage.getItem(slot) != null) {
       const loadData = JSON.parse(localStorage.getItem(slot));
       setIsLoading(true);
+      setVariables(loadData.variables);
       sceneLoader(loadData.currentSceneId)
         .then((res) => {
           setCurrentScene(res);

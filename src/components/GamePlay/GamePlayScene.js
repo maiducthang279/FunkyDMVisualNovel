@@ -12,6 +12,8 @@ import ChoiceModal from '../shared/ChoiceModal';
 import { convertNodeToData } from '../../services/dataService';
 import { openNotification } from '../GameEditorPage/gameEditor.util';
 import AnimatedContent from '../shared/AnimatedContent';
+import { useRecoilState } from 'recoil';
+import { variablesState } from '../../routes/store';
 
 const GamePlayScene = ({ currentScene }) => {
   const { width, height } = useWindowSize();
@@ -25,6 +27,7 @@ const GamePlayScene = ({ currentScene }) => {
   const [leftCharacter, setLeftCharacter] = useState(null);
   const [rightCharacter, setRightCharacter] = useState(null);
   const [background, setBackground] = useState(null);
+  const [variables, setVariables] = useRecoilState(variablesState);
 
   const [isDisable, setIsDisable] = useState(false);
   const [isShowAll, setIsShowAll] = useState(false);
@@ -89,7 +92,6 @@ const GamePlayScene = ({ currentScene }) => {
         break;
       case 'event':
         handleEvent(currentNode);
-        goToNextStep();
         break;
       default:
         break;
@@ -106,7 +108,7 @@ const GamePlayScene = ({ currentScene }) => {
     setCurrentChoice(currentNodeData);
   }, []);
 
-  const handleEvent = useCallback((currentNodeData) => {
+  const handleEvent = (currentNodeData) => {
     const { eventType, params } = currentNodeData;
     switch (eventType) {
       case 'Set Character':
@@ -124,10 +126,19 @@ const GamePlayScene = ({ currentScene }) => {
           description: 'This is end node!',
         });
         break;
+      case 'Store Variable':
+        storeVariable(params);
+        break;
+      case 'Check Variable':
+        checkVariable(params, currentNodeData.options);
+        break;
       default:
         break;
     }
-  }, []);
+    if (!(currentNode.eventType === 'Check Variable')) {
+      goToNextStep();
+    }
+  };
 
   const initCharacter = (params) => {
     const { characterPosition } = params;
@@ -150,6 +161,41 @@ const GamePlayScene = ({ currentScene }) => {
   const initBackground = (params) => {
     const { backgroundUrl } = params;
     setBackground(backgroundUrl);
+  };
+  const storeVariable = (param) => {
+    const newVariables = variables.map((variable) =>
+      variable.id === param.variableId
+        ? { ...variable, current: param.value }
+        : variable
+    );
+    setVariables(newVariables);
+  };
+
+  const checkVariable = (param, options) => {
+    const currentVariable = variables.find(
+      (variable) => variable.id === param.variableId
+    );
+    Loop: for (let i = 0; i < options.length; i++) {
+      const option = options[i];
+      switch (option.operator) {
+        case 'equal':
+          if (currentVariable.current === option.value) {
+            setCurrentNode(data.get(option.nextId));
+            // setTimeout(() => setCurrentNode(data.get(option.nextId)),0);
+            break Loop;
+          }
+          break;
+        case 'not equal':
+          if (currentVariable.current !== option.value) {
+            setCurrentNode(data.get(option.nextId));
+            // setTimeout(() => setCurrentNode(data.get(option.nextId)),0);
+            break Loop;
+          }
+          break;
+        default:
+          break;
+      }
+    }
   };
 
   const getStageSize = () => ({

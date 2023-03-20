@@ -1,0 +1,23 @@
+.game_variables {
+  .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .ant-typography {
+      margin: 0.5rem 0;
+    }
+  }
+  input {
+    width: 100%;
+  }
+
+  .variable_item {
+    margin-bottom: 1rem;
+    border: 1px solid #cccccc;
+    border-radius: 2px;
+    padding: 0 0.5rem 0.5rem;
+    .variable_item_header {
+      border-bottom: 1px solid #cccccc;
+    }
+  }
+}

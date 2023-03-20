@@ -56,6 +56,27 @@ const GameNode = ({
     });
   };
 
+  const getOptionContent = (item) => {
+    if (item.content) {
+      return item.content;
+    }
+    if (item.value) {
+      return `${getOperator(item.operator)} ${item.value}`;
+    }
+    return '';
+  };
+
+  const getOperator = (operator) => {
+    switch (operator) {
+      case 'equal':
+        return '=';
+      case 'not equal':
+        return '\u2260';
+      default:
+        return '';
+    }
+  };
+
   return (
     <Group
       x={x}
@@ -78,6 +99,35 @@ const GameNode = ({
         shadowColor={isFocused ? getColor(node.type) : undefined}
         shadowBlur={isFocused ? 10 : undefined}
       />
+      {node.eventType && (
+        <>
+          <Rect
+            x={-fontSize / 2 - padding / 2}
+            y={-fontSize / 2 - padding / 2}
+            width={width + fontSize / 2 + padding / 2}
+            height={fontSize + padding}
+            stroke={getColor(node.type)}
+            fill="white"
+            strokeWidth={2}
+            cornerRadius={fontSize + padding}
+            shadowColor={isFocused ? getColor(node.type) : undefined}
+            shadowBlur={isFocused ? 5 : 1}
+          />
+          <Text
+            x={typeWidth - fontSize / 2 - padding / 2}
+            y={-fontSize - padding / 2}
+            text={node.eventType}
+            width={width - typeWidth + fontSize / 2 + padding / 2}
+            height={fontSize * 2 + padding}
+            fontSize={fontSize * 0.8}
+            padding={padding / 2}
+            ellipsis
+            fill="black"
+            align="left"
+            verticalAlign="middle"
+          ></Text>
+        </>
+      )}
       <Rect
         x={-fontSize / 2 - padding / 2}
         y={-fontSize / 2 - padding / 2}
@@ -145,7 +195,7 @@ const GameNode = ({
           <Text
             x={padding}
             y={0}
-            text={`${index + 1}. ${item.content}`}
+            text={`${index + 1}. ${getOptionContent(item)}`}
             width={width}
             height={optionHeight - padding / 2}
             fontSize={fontSize}

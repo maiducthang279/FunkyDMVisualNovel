@@ -5,7 +5,6 @@ import {
   getListData,
   updateData,
 } from '../../services/firebaseServices';
-import { mockData } from '../../services/mockData';
 import GameEditorPage from './GameEditorPage';
 
 export async function gameEditorLoader({ params }) {
@@ -37,12 +36,7 @@ export async function gameEditorLoader({ params }) {
   ]);
   return {
     project,
-    game: {
-      ...game,
-      gameData: {
-        nodes: mockData,
-      },
-    },
+    game,
     characters,
     backgrounds,
     scenes: scenes.sort((a, b) => a.name.localeCompare(b.name)),
@@ -62,6 +56,14 @@ export async function publishGame(id, isPublish = true) {
   const game = await updateData(doc(firestore, 'games', id), {
     status: isPublish ? 'Published' : 'Work in progress',
     modifiedTime: Date.now(),
+  });
+
+  return game;
+}
+
+export async function editGameVariable(id, variables) {
+  const game = await updateData(doc(firestore, 'games', id), {
+    variables: variables,
   });
 
   return game;

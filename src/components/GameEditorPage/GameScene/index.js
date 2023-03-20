@@ -14,7 +14,6 @@ export async function addNewScene(values) {
   return newScene;
 }
 export async function updateScene(id, value) {
-  console.log(value);
   return await updateData(doc(firestore, `scenes`, id), {
     ...value,
   });

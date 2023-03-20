@@ -51,6 +51,11 @@ export const backgroundsState = atom({
   default: [],
 });
 
+export const variablesState = atom({
+  key: 'variablesState',
+  default: [],
+});
+
 export const scenesState = atom({
   key: 'scenes',
   default: [],

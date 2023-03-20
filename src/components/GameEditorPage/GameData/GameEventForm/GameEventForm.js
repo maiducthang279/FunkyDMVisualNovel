@@ -1,5 +1,15 @@
-import { Col, Divider, Form, Image, Row, Select } from 'antd';
-import React, { useEffect, useState } from 'react';
+import {
+  Button,
+  Col,
+  Divider,
+  Form,
+  Image,
+  Input,
+  Row,
+  Select,
+  Space,
+} from 'antd';
+import React, { useEffect, useMemo, useState } from 'react';
 import ReactQuill from 'react-quill';
 import { useRecoilValue } from 'recoil';
 import {
@@ -7,19 +17,22 @@ import {
   charactersState,
   currentEditedSceneState,
   scenesState,
+  variablesState,
 } from '../../../../routes/store';
 import { defaultImage } from '../../../../services/util';
 import { EVENT_TYPES } from '../../gameEditor.util';
 
 import 'react-quill/dist/quill.snow.css';
 import './GameEventForm.scss';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 const { Option } = Select;
 
-const GameEventForm = ({ form }) => {
+const GameEventForm = ({ form, nextNodeOptions }) => {
   const backgrounds = useRecoilValue(backgroundsState);
   const characters = useRecoilValue(charactersState);
   const scenes = useRecoilValue(scenesState);
   const currentScene = useRecoilValue(currentEditedSceneState);
+  const variables = useRecoilValue(variablesState);
   const eventType = Form.useWatch('eventType', form);
   const characterId = Form.useWatch(['params', 'characterId'], form);
 
@@ -249,6 +262,128 @@ const GameEventForm = ({ form }) => {
             />
           </Form.Item>
         );
+      case 'Store Variable':
+        return (
+          <>
+            <Form.Item
+              name={['params', 'variableId']}
+              rules={[{ required: true, message: 'Can not be empty!' }]}
+            >
+              <Select
+                placeholder="Variable"
+                options={variables.map((variable) => ({
+                  value: variable.id,
+                  label: variable.name,
+                }))}
+                onChange={() => form.submit()}
+              ></Select>
+            </Form.Item>
+            <Form.Item
+              name={['params', 'value']}
+              rules={[{ required: true, message: 'Can not be empty!' }]}
+            >
+              <Input placeholder="Value" onChange={() => form.submit()}></Input>
+            </Form.Item>
+          </>
+        );
+      case 'Check Variable':
+        return (
+          <>
+            <Form.Item
+              name={['params', 'variableId']}
+              rules={[{ required: true, message: 'Can not be empty!' }]}
+            >
+              <Select
+                placeholder="Variable"
+                options={variables.map((variable) => ({
+                  value: variable.id,
+                  label: variable.name,
+                }))}
+                onChange={() => form.submit()}
+              ></Select>
+            </Form.Item>
+            <Form.List name={'options'}>
+              {(fields, { add, remove }) => (
+                <>
+                  <Divider orientation="left">Options</Divider>
+                  {fields.map(({ key, name, ...restField }) => (
+                    <Space
+                      key={key}
+                      style={{ width: '100%', marginBottom: '1rem' }}
+                      align="start"
+                      direction="horizontal"
+                    >
+                      <div>
+                        <Form.Item
+                          {...restField}
+                          name={[name, 'operator']}
+                          rules={[
+                            { required: true, message: 'Can not be empty!' },
+                          ]}
+                        >
+                          <Select
+                            placeholder="Operator"
+                            options={[
+                              {
+                                value: 'equal',
+                                label: '=',
+                              },
+                              {
+                                value: 'not equal',
+                                label: '\u2260',
+                              },
+                            ]}
+                            onChange={() => form.submit()}
+                          ></Select>
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, 'value']}
+                          rules={[
+                            { required: true, message: 'Can not be empty!' },
+                          ]}
+                        >
+                          <Input
+                            placeholder="Value"
+                            onBlur={() => form.submit()}
+                            onPressEnter={() => form.submit()}
+                          ></Input>
+                        </Form.Item>
+                        <Form.Item {...restField} name={[name, 'nextId']}>
+                          <Select
+                            showSearch
+                            placeholder="Node"
+                            options={nextNodeOptions}
+                            onChange={() => form.submit()}
+                          ></Select>
+                        </Form.Item>
+                      </div>
+                      <Button
+                        disabled={
+                          form.getFieldValue(['options', name, 'nextId']) &&
+                          form.getFieldValue(['options', name, 'nextId']) !== ''
+                        }
+                        onClick={() => remove(name)}
+                      >
+                        <MinusCircleOutlined />
+                      </Button>
+                    </Space>
+                  ))}
+                  <Form.Item>
+                    <Button
+                      type="dashed"
+                      onClick={() => add()}
+                      block
+                      icon={<PlusOutlined />}
+                    >
+                      Add option
+                    </Button>
+                  </Form.Item>
+                </>
+              )}
+            </Form.List>
+          </>
+        );
       default:
         return null;
     }
@@ -266,6 +401,24 @@ const GameEventForm = ({ form }) => {
         ></Select>
       </Form.Item>
       {renderForm()}
+      {eventType !== 'Check Variable' && (
+        <>
+          <Divider>Ref</Divider>
+          <Form.Item label="Next to" name={'nextId'}>
+            <Select
+              showSearch
+              placeholder="Node"
+              style={{ width: '100%' }}
+              options={nextNodeOptions}
+              optionFilterProp="label"
+              filterOption={(input, option) =>
+                (option?.label ?? '').includes(input)
+              }
+              onChange={() => form.submit()}
+            ></Select>
+          </Form.Item>
+        </>
+      )}
     </>
   );
 };

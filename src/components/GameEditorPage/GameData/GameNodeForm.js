@@ -169,7 +169,9 @@ const GameNodeForm = ({ form, node, onFinish }) => {
             </Form.Item>
           </>
         )}
-        {node.type === 'event' && <GameEventForm form={form} />}
+        {node.type === 'event' && (
+          <GameEventForm form={form} nextNodeOptions={nextNodeOptions} />
+        )}
         {node.type === 'choice' && (
           <Form.List name={'options'}>
             {(fields, { add, remove }) => (
@@ -225,7 +227,7 @@ const GameNodeForm = ({ form, node, onFinish }) => {
             )}
           </Form.List>
         )}
-        {['dialog', 'root', 'event'].includes(node.type) && (
+        {['dialog', 'root'].includes(node.type) && (
           <>
             <Divider>Ref</Divider>
             <Form.Item label="Next to" name={'nextId'}>

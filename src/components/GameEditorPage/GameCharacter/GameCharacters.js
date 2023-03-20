@@ -145,18 +145,10 @@ const GameCharacters = () => {
   };
   return (
     <div className="game_characters">
-      <Row justify={'end'}>
-        <Col>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={handleAddChacracter}
-          >
-            Add Character
-          </Button>
-        </Col>
-      </Row>
-      <br />
+      <Button block icon={<PlusOutlined />} onClick={handleAddChacracter}>
+        Add Character
+      </Button>
+      <Divider></Divider>
       <div>
         <Collapse accordion>
           {characters.map((character) => (

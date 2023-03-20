@@ -3,6 +3,7 @@ import {
   ArrowLeftOutlined,
   CloudDownloadOutlined,
   CloudUploadOutlined,
+  CodeOutlined,
   ExportOutlined,
   MenuOutlined,
   PictureOutlined,
@@ -26,6 +27,7 @@ import {
   scenesState,
   currentEditedSceneState,
   isPlayingState,
+  variablesState,
 } from '../../routes/store';
 import GamePlayScene from '../GamePlay/GamePlayScene';
 import LoadingEffectIcon from '../shared/LoadingEffectIcon';
@@ -37,6 +39,7 @@ import { openNotification } from './gameEditor.util';
 import './GameEditorPage.scss';
 import GameMetadataForm from './GameMetadata';
 import GameScenes, { updateScene } from './GameScene';
+import GameVariable from './GameVariable';
 
 const DRAWERS = {
   MAIN_MENU: 'MAIN_MENU',
@@ -44,6 +47,7 @@ const DRAWERS = {
   SCENE: 'SCENE',
   CHARACTER: 'CHARACTER',
   BACKGROUND: 'BACKGROUND',
+  VARIABLE: 'VARIABLE',
 };
 
 const GameEditorPage = () => {
@@ -58,6 +62,7 @@ const GameEditorPage = () => {
   const [, setCharacters] = useRecoilState(charactersState);
   const [, setBackgrounds] = useRecoilState(backgroundsState);
   const [, setScenes] = useRecoilState(scenesState);
+  const [, setVariables] = useRecoilState(variablesState);
   const [currentScene, setCurrentScene] = useRecoilState(
     currentEditedSceneState
   );
@@ -68,21 +73,38 @@ const GameEditorPage = () => {
   const [openedDrawer, setOpenedDrawer] = useState(null);
 
   useEffect(() => {
+    const currentEditGameVariables = JSON.parse(
+      localStorage.getItem(`edit-variable-${loaderData.game.id}`)
+    );
+
     setGame(loaderData.game);
     setProject(loaderData.project);
     setCharacters(loaderData.characters);
     setBackgrounds(loaderData.backgrounds);
     setScenes(loaderData.scenes);
+    if (currentEditGameVariables && currentEditGameVariables.length > 0) {
+      setVariables(
+        loaderData.game.variables?.map((variable) => {
+          const savedCurrentVariable = currentEditGameVariables?.find(
+            ({ id }) => id === variable.id
+          );
+          return {
+            ...variable,
+            current: savedCurrentVariable?.current || variable.default,
+          };
+        }) || []
+      );
+    } else {
+      setVariables(
+        loaderData.game.variables?.map((variable) => ({
+          ...variable,
+          current: variable.default,
+        })) || []
+      );
+    }
     if (loaderData.scenes.length > 0) {
       setCurrentScene(loaderData.scenes[0]);
     }
-    return () => {
-      setGame(null);
-      setProject(null);
-      setCharacters([]);
-      setBackgrounds([]);
-      setScenes([]);
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -213,6 +235,14 @@ const GameEditorPage = () => {
             onClick={() => handleOpenDrawer(DRAWERS.BACKGROUND)}
           />
         </Tooltip>
+        <Tooltip title="Variable" placement="left">
+          <Button
+            type="primary"
+            shape="circle"
+            icon={<CodeOutlined />}
+            onClick={() => handleOpenDrawer(DRAWERS.VARIABLE)}
+          />
+        </Tooltip>
       </Space>
       <div className={`main ${isPlaying ? 'hide' : ''}`}>
         <GameData />
@@ -328,6 +358,14 @@ const GameEditorPage = () => {
         open={openedDrawer === DRAWERS.BACKGROUND}
       >
         <GameBackgrounds />
+      </Drawer>
+      <Drawer
+        title="Variables"
+        placement="right"
+        onClose={handleCloseDrawer}
+        open={openedDrawer === DRAWERS.VARIABLE}
+      >
+        <GameVariable />
       </Drawer>
     </div>
   );

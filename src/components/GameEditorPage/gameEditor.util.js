@@ -45,6 +45,7 @@ export const makeNewNode = (type, data) => {
         eventType: 'None',
         params: {},
         nextId: '',
+        options: [],
       };
       break;
     default:
@@ -67,6 +68,8 @@ export const EVENT_TYPES = [
   { value: 'Remove Character', label: 'Remove Character' },
   { value: 'Go to Next Scene', label: 'Go to Next Scene' },
   { value: 'End Game', label: 'End Game' },
+  { value: 'Store Variable', label: 'Store Variable' },
+  { value: 'Check Variable', label: 'Check Variable' },
 ];
 
 export const openNotification = (data) => {

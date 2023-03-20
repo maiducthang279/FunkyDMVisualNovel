@@ -83,16 +83,13 @@ const GameBackgrounds = () => {
   };
   return (
     <div className="game_backgrounds">
-      <Row justify={'end'}>
-        <Col>
-          <UploadImage onChange={(value) => handleAddBackground(value)}>
-            <Button type="primary" icon={<PlusOutlined />}>
-              Add Background
-            </Button>
-          </UploadImage>
-        </Col>
-      </Row>
-      <br />
+      <UploadImage onChange={(value) => handleAddBackground(value)}>
+        <Button block icon={<PlusOutlined />}>
+          Add Background
+        </Button>
+      </UploadImage>
+
+      <Divider></Divider>
       <div>
         {backgrounds.map((background) => (
           <BackgroundImage image={background} key={background.id} />
