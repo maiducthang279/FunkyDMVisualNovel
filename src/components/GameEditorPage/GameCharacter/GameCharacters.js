@@ -1,26 +1,19 @@
+import './GameCharacters.scss';
+
 import { DeleteOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
-import {
-  Button,
-  Col,
-  Collapse,
-  Divider,
-  Image,
-  Row,
-  Space,
-  Typography,
-} from 'antd';
+import { Button, Collapse, Divider, Image, Row, Space, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+
 import { addNewCharacter, updateCharacter } from '.';
 import {
   charactersState,
   currentEditedGameProjectState,
 } from '../../../routes/store';
 import { defaultImage } from '../../../services/util';
-import './GameCharacters.scss';
-import GameCharacterDelete from './GameCharactersDelete';
-import UploadImage from '../../shared/UploadImage';
 import LoadingEffectIcon from '../../shared/LoadingEffectIcon';
+import UploadImage from '../../shared/UploadImage';
+import GameCharacterDelete from './GameCharactersDelete';
 
 const { Panel } = Collapse;
 const { Paragraph } = Typography;

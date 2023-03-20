@@ -9,7 +9,7 @@ import {
   Select,
   Space,
 } from 'antd';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import { useRecoilValue } from 'recoil';
 import {
@@ -22,9 +22,9 @@ import {
 import { defaultImage } from '../../../../services/util';
 import { EVENT_TYPES } from '../../gameEditor.util';
 
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import 'react-quill/dist/quill.snow.css';
 import './GameEventForm.scss';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 const { Option } = Select;
 
 const GameEventForm = ({ form, nextNodeOptions }) => {
