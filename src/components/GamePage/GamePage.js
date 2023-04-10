@@ -8,7 +8,6 @@ import GameSettings from '../shared/GameSettings/GameSettings';
 import SaveAndLoad from '../shared/SaveAndLoad/SaveAndLoad';
 import { useRecoilState } from 'recoil';
 import { currentEditedGameState } from '../../routes/store';
-import Loading from '../shared/Loading';
 import GamePlay from '../GamePlay';
 
 const GamePage = () => {
