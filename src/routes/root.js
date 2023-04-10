@@ -5,6 +5,7 @@ import React from 'react';
 import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
+import Loading from '../components/shared/Loading';
 import { auth, firestore } from '../services/firebase';
 import { getUserData, setData, updateData } from '../services/firebaseServices';
 import { permissionState, userState } from './store';
@@ -64,6 +65,7 @@ export default function Root() {
     <>
       <Outlet></Outlet>
       {contextHolder}
+      <Loading />
     </>
   );
 }

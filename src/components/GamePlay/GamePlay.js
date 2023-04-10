@@ -12,16 +12,17 @@ import ChoiceModal from '../shared/ChoiceModal';
 import SaveAndLoad from '../shared/SaveAndLoad/SaveAndLoad';
 import moment from 'moment';
 import { sceneLoader } from '.';
-import Loading from '../shared/Loading';
 import { convertNodeToData } from '../../services/dataService';
 import AnimatedContent from '../shared/AnimatedContent';
 import { getListImage } from '../utils/utils';
 import DOMPurify from 'dompurify';
+import { useRecoilState } from 'recoil';
+import { isLoadingState } from '../../routes/store';
 
 const GamePlay = ({ game, loadGameSlot, onBack }) => {
   const { width, height } = useWindowSize();
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useRecoilState(isLoadingState);
   const [currentScene, setCurrentScene] = useState(null);
   const [data, setData] = useState(null);
   const [currentNode, setCurrentNode] = useState(null);
@@ -209,6 +210,10 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
     setIsLoading(true);
     hideDialog({ isHidden: true });
     setCurrentDialog(null);
+    setBackground(null);
+    setLeftCharacter(null);
+    setRightCharacter(null);
+    setCurrentChoice(null);
     sceneLoader(param.nextSceneId)
       .then((res) => {
         setCurrentScene(res);
@@ -495,11 +500,8 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
           onOptionClick={handleOptionClick}
         />
       )}
-      {isLoading ? <Loading /> : null}
     </>
-  ) : (
-    <Loading />
-  );
+  ) : null;
 };
 
 export default GamePlay;

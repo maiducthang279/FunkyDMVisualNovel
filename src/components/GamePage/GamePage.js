@@ -95,9 +95,7 @@ const GamePage = () => {
         </div>
       </div>
     </div>
-  ) : (
-    <Loading />
-  );
+  ) : null;
 };
 
 export default GamePage;

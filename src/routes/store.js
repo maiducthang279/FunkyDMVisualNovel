@@ -65,3 +65,8 @@ export const isPlayingState = atom({
   key: 'isPlaying',
   default: false,
 });
+
+export const isLoadingState = atom({
+  key: 'isLoading',
+  default: false,
+});

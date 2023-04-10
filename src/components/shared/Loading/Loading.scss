@@ -1,3 +1,6 @@
+$loadingBackgroundColor: black;
+$lineColor: #ffffff88;
+
 .loading_container {
   position: fixed;
   width: 100vw;
@@ -9,7 +12,234 @@
 
   top: 0;
   left: 0;
-  background-color: #00000088;
+  background-color: $loadingBackgroundColor;
 
   overflow: hidden;
+  z-index: 1000;
+
+  .preShow {
+    animation: fade-in 0.5s ease-in-out forwards;
+  }
+  &.show {
+    display: flex;
+  }
+  .preHide {
+    animation: fade-out 0.5s ease-in-out forwards;
+  }
+  &.hide {
+    display: none;
+  }
+  .loading_overlay {
+    position: absolute;
+    outline: 20000px solid #006584ee;
+    transform: translate(-50%, 0);
+    transform-origin: center;
+  }
+  .loading {
+    position: relative;
+    font-family: 'Courier New', Courier, monospace;
+    color: #ffffffaa;
+    font-weight: bolder;
+    animation: highlight-text 2.5s linear infinite;
+
+    .loading_item {
+      position: absolute;
+      text-align: center;
+      transition: all;
+      background-color: $loadingBackgroundColor;
+      border-radius: 100%;
+      box-sizing: border-box;
+    }
+    .spin {
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      animation-duration: 10s;
+    }
+    .spin-0 {
+      animation-name: spin-0;
+    }
+    .spin-1 {
+      animation-name: spin-1;
+    }
+    .spin-2 {
+      animation-name: spin-2;
+    }
+    .spin-3 {
+      animation-name: spin-3;
+    }
+    .reverse {
+      animation-direction: reverse;
+    }
+    .loading_circle {
+      position: absolute;
+      border-radius: 100%;
+      border: 4px solid $lineColor;
+      opacity: 0.5;
+    }
+  }
+}
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes highlight-text {
+  0% {
+    text-shadow: 0px 0px 9px #00aeff;
+  }
+  17% {
+    text-shadow: 0px 0px 9px #00aeff;
+  }
+  40% {
+    text-shadow: 0px 0px 9px #00000000;
+  }
+  85% {
+    text-shadow: 0px 0px 9px #00000000;
+  }
+  95% {
+    text-shadow: 0px 0px 9px #00aeff;
+  }
+  100% {
+    text-shadow: 0px 0px 9px #00aeff;
+  }
+}
+
+@keyframes spin-0 {
+  0% {
+    transform: rotate(0turn);
+  }
+  10% {
+    transform: rotate(0turn);
+  }
+  15% {
+    transform: rotate(0.25turn);
+  }
+  35% {
+    transform: rotate(0.25turn);
+  }
+  40% {
+    transform: rotate(0.5turn);
+  }
+  55% {
+    transform: rotate(0.5turn);
+  }
+  65% {
+    transform: rotate(0.75turn);
+  }
+  85% {
+    transform: rotate(0.75turn);
+  }
+  90% {
+    transform: rotate(1turn);
+  }
+  100% {
+    transform: rotate(1turn);
+  }
+}
+@keyframes spin-1 {
+  0% {
+    transform: rotate(0turn);
+  }
+  5% {
+    transform: rotate(0turn);
+  }
+  20% {
+    transform: rotate(0.25turn);
+  }
+  30% {
+    transform: rotate(0.25turn);
+  }
+  45% {
+    transform: rotate(0.5turn);
+  }
+  55% {
+    transform: rotate(0.5turn);
+  }
+  70% {
+    transform: rotate(0.75turn);
+  }
+  80% {
+    transform: rotate(0.75turn);
+  }
+  95% {
+    transform: rotate(1turn);
+  }
+  100% {
+    transform: rotate(1turn);
+  }
+}
+@keyframes spin-2 {
+  0% {
+    transform: rotate(0turn);
+  }
+  7% {
+    transform: rotate(0turn);
+  }
+  18% {
+    transform: rotate(0.25turn);
+  }
+  32% {
+    transform: rotate(0.25turn);
+  }
+  43% {
+    transform: rotate(0.5turn);
+  }
+  57% {
+    transform: rotate(0.5turn);
+  }
+  68% {
+    transform: rotate(0.75turn);
+  }
+  82% {
+    transform: rotate(0.75turn);
+  }
+  93% {
+    transform: rotate(1turn);
+  }
+  100% {
+    transform: rotate(1turn);
+  }
+}
+@keyframes spin-3 {
+  0% {
+    transform: rotate(0turn);
+  }
+  8% {
+    transform: rotate(0turn);
+  }
+  17% {
+    transform: rotate(0.25turn);
+  }
+  33% {
+    transform: rotate(0.25turn);
+  }
+  42% {
+    transform: rotate(0.5turn);
+  }
+  53% {
+    transform: rotate(0.5turn);
+  }
+  67% {
+    transform: rotate(0.75turn);
+  }
+  83% {
+    transform: rotate(0.75turn);
+  }
+  92% {
+    transform: rotate(1turn);
+  }
+  100% {
+    transform: rotate(1turn);
+  }
 }
