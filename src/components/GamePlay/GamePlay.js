@@ -6,7 +6,7 @@ import KonvaCharacter from '../shared/KonvaComponents/KonvaCharacter';
 
 import './GamePlay.scss';
 import { MenuButton } from '../shared/Button';
-import { Space } from 'antd';
+import { Drawer, Space } from 'antd';
 import { CaretRightOutlined } from '@ant-design/icons';
 import ChoiceModal from '../shared/ChoiceModal';
 import SaveAndLoad from '../shared/SaveAndLoad/SaveAndLoad';
@@ -21,6 +21,8 @@ import { isLoadingState } from '../../routes/store';
 
 const GamePlay = ({ game, loadGameSlot, onBack }) => {
   const { width, height } = useWindowSize();
+
+  const [isOpenMainMenu, setIsOpenMainMenu] = useState(false);
 
   const [isLoading, setIsLoading] = useRecoilState(isLoadingState);
   const [currentScene, setCurrentScene] = useState(null);
@@ -58,10 +60,17 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
       if (event.repeat) {
         return;
       } else {
-        if (key === 'Enter' || key === ' ') {
-          goToNextStep();
-        } else {
-          return;
+        switch (key) {
+          case 'Enter':
+          case ' ':
+            goToNextStep();
+            break;
+          case 'Escape':
+            event.preventDefault();
+            setIsOpenMainMenu((prev) => !prev);
+            break;
+          default:
+            return;
         }
       }
     },
@@ -448,7 +457,9 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
             }`}
           >
             {currentDialog?.characterName && (
-              <h1>{`${currentDialog?.characterName}:`}</h1>
+              <div className="title-container">
+                <h1>{`${currentDialog?.characterName}`}</h1>
+              </div>
             )}
             <div className="paragraph">
               {isSkipText ? (
@@ -473,19 +484,9 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
               >
                 Tua nhanh
               </MenuButton>
-              <MenuButton onClick={() => backToMenu()}>Về trang chủ</MenuButton>
-              <SaveAndLoad
-                gameId={game.id}
-                type="Load"
-                onLoad={(slot) => {
-                  loadGame(slot);
-                }}
-              />
-              <SaveAndLoad
-                type="Save"
-                gameId={game.id}
-                onSave={(slot) => saveGame(slot)}
-              />
+              <MenuButton onClick={() => setIsOpenMainMenu(true)}>
+                Menu
+              </MenuButton>
               <MenuButton disabled={isDisable} onClick={() => goToNextStep()}>
                 Tiếp theo <CaretRightOutlined />
               </MenuButton>
@@ -500,6 +501,43 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
           onOptionClick={handleOptionClick}
         />
       )}
+      <Drawer
+        closable={false}
+        placement="left"
+        width={'100%'}
+        open={isOpenMainMenu}
+        bodyStyle={{ padding: 0 }}
+      >
+        <div className="main-menu-container">
+          <div className="background">
+            <img src={background || game.background} alt="main page"></img>
+          </div>
+          <Space direction="vertical" size="large">
+            <h1>Menu</h1>
+            <MenuButton onClick={() => setIsOpenMainMenu(false)}>
+              Tiếp tục chơi
+            </MenuButton>
+            <SaveAndLoad
+              gameId={game.id}
+              type="Load"
+              onLoad={(slot) => {
+                loadGame(slot);
+                setIsOpenMainMenu(false);
+              }}
+            >
+              Tải
+            </SaveAndLoad>
+            <SaveAndLoad
+              type="Save"
+              gameId={game.id}
+              onSave={(slot) => saveGame(slot)}
+            >
+              Lưu
+            </SaveAndLoad>
+            <MenuButton onClick={() => backToMenu()}>Về trang chủ</MenuButton>
+          </Space>
+        </div>
+      </Drawer>
     </>
   ) : null;
 };

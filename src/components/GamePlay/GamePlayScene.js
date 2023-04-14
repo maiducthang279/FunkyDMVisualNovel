@@ -295,7 +295,7 @@ const GamePlayScene = ({ currentScene }) => {
           }`}
         >
           {currentDialog?.characterName && (
-            <h1>{`${currentDialog?.characterName}:`}</h1>
+            <h1>{`${currentDialog?.characterName}`}</h1>
           )}
           <div className="paragraph">
             {isSkipText ? (

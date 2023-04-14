@@ -1,17 +1,16 @@
-.button{
+.button {
   user-select: none;
 
   position: relative;
   display: inline;
   cursor: pointer;
-  font-size: 2rem;
+  font-size: 1.5rem;
   width: 100%;
-  font-family: 'Amatic SC', cursive;
+  font-family: 'Open Sans', sans-serif;
 
   &.disabled {
     color: grey;
     cursor: default;
-    
   }
 
   &.active {
@@ -27,8 +26,6 @@
       }
     }
   }
-
-  
 }
 // .button_disabled {
 //   color: grey;

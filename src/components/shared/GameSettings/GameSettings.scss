@@ -1,35 +1,34 @@
 .center {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .modal-container {
-    position: relative;
-    padding: 0em 2em;
-    min-width: 12em;
-    .title {
-        font-family: 'Amatic SC', cursive;
-        font-size: 3rem;
-        text-align: center;
-    }
+  position: relative;
+  padding: 0em 2em;
+  min-width: 12em;
+  .title {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 2rem;
+    text-align: center;
+  }
 
-    .options {
-        font-family: 'Amatic SC', cursive;
-        font-size: 1.5rem;
-    }
+  .options {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.2rem;
+  }
 
-    .slider {
-        margin: auto;
-    }
+  .slider {
+    margin: auto;
+  }
 
-    .slider-track {
-        height: 0%;
-    }
+  .slider-track {
+    height: 0%;
+  }
 
-    .split {
-        font-family: 'Amatic SC', cursive;
-        font-size: 2rem;
-        font-weight: bold;
-    }
-
+  .split {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
 }

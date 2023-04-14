@@ -7,7 +7,12 @@ import { MenuButton } from '../Button';
 const GameSettings = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
-  const [setting,setSetting] = useState({ textSpeed: 50, music: 100, sFX: 100, voice: 100 })
+  const [setting, setSetting] = useState({
+    textSpeed: 50,
+    music: 100,
+    sFX: 100,
+    voice: 100,
+  });
 
   useEffect(() => {
     loadSetting();
@@ -17,19 +22,19 @@ const GameSettings = () => {
     setIsModalOpen(true);
   };
 
-  const onFinish =(value) => {
-    localStorage.setItem('setting',JSON.stringify(value));
-  }
-  const handleSummit = () =>{
+  const onFinish = (value) => {
+    localStorage.setItem('setting', JSON.stringify(value));
+  };
+  const handleSummit = () => {
     form.submit();
     setIsModalOpen(false);
-  }
+  };
 
   const loadSetting = () => {
-    if (localStorage.getItem("setting") != null) {
-      setSetting(JSON.parse(localStorage.getItem("setting")));
+    if (localStorage.getItem('setting') != null) {
+      setSetting(JSON.parse(localStorage.getItem('setting')));
     }
-  }
+  };
 
   return (
     <>
@@ -37,7 +42,7 @@ const GameSettings = () => {
       <Modal
         centered
         open={isModalOpen}
-        bodyStyle={{ height: 350 }}
+        bodyStyle={{ height: 320 }}
         footer={[
           <MenuButton key={'ok'} onClick={handleSummit}>
             Xong
@@ -45,11 +50,7 @@ const GameSettings = () => {
         ]}
       >
         <div className="modal-container">
-          <Form 
-          initialValues={setting}
-          onFinish={onFinish}
-          form={form}
-          >
+          <Form initialValues={setting} onFinish={onFinish} form={form}>
             <Col span={24}>
               <h1 className="title">
                 <SettingFilled /> Cài Đặt <SettingFilled />
