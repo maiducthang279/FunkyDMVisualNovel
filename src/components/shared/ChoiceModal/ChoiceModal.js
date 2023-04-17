@@ -17,7 +17,7 @@ const ChoiceModal = ({ content, options = [], onOptionClick }) => {
               key={index}
               onClick={() => handleOptionClick(option)}
             >
-              <p className="ellipsis">{option.content}</p>
+              <p className="option-ellipsis">{option.content}</p>
             </div>
           ))}
         </div>
