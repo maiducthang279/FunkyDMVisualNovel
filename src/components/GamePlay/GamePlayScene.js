@@ -27,6 +27,7 @@ const GamePlayScene = ({ currentScene }) => {
   const [leftCharacter, setLeftCharacter] = useState(null);
   const [rightCharacter, setRightCharacter] = useState(null);
   const [background, setBackground] = useState(null);
+  const [backgroundEffect, setBackgroundEffect] = useState(null);
   const [variables, setVariables] = useRecoilState(variablesState);
 
   const [isDisable, setIsDisable] = useState(false);
@@ -120,6 +121,18 @@ const GamePlayScene = ({ currentScene }) => {
       case 'Set Background':
         initBackground(params);
         break;
+      case 'Remove Background':
+        if (params.effect === 'fade') {
+          setBackgroundEffect('fade');
+          setTimeout(() => {
+            setBackgroundEffect(null);
+            goToNextStep();
+          }, 1500);
+        } else {
+          removeBackground();
+          goToNextStep();
+        }
+        break;
       case 'Go to Next Scene':
         openNotification({
           message: 'End',
@@ -135,7 +148,9 @@ const GamePlayScene = ({ currentScene }) => {
       default:
         break;
     }
-    if (!(currentNode.eventType === 'Check Variable')) {
+    if (
+      !['Check Variable', 'Remove Background'].includes(currentNode.eventType)
+    ) {
       goToNextStep();
     }
   };
@@ -162,6 +177,11 @@ const GamePlayScene = ({ currentScene }) => {
     const { backgroundUrl } = params;
     setBackground(backgroundUrl);
   };
+
+  const removeBackground = (params) => {
+    setBackground(null);
+  };
+
   const storeVariable = (param) => {
     const newVariables = variables.map((variable) =>
       variable.id === param.variableId
@@ -257,7 +277,13 @@ const GamePlayScene = ({ currentScene }) => {
           offsetX={-getStageSize().width / 2}
           offsetY={-getStageSize().height}
         >
-          {background && <KonvaBackground url={background}></KonvaBackground>}
+          {background && (
+            <KonvaBackground
+              url={background}
+              effect={backgroundEffect}
+              removeBackground={removeBackground}
+            ></KonvaBackground>
+          )}
         </Layer>
         <Layer
           offsetX={-getStageSize().width / 2}

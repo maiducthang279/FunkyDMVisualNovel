@@ -10189,7 +10189,7 @@ unicode-property-aliases-ecmascript@^2.0.0:
 
 uniqid@^5.4.0:
   version "5.4.0"
-  resolved "https://registry.npmjs.org/uniqid/-/uniqid-5.4.0.tgz"
+  resolved "https://registry.yarnpkg.com/uniqid/-/uniqid-5.4.0.tgz#4e17bfcab66dfe33563411ae0c801f46ef964e66"
   integrity sha512-38JRbJ4Fj94VmnC7G/J/5n5SC7Ab46OM5iNtSstB/ko3l1b5g7ALt4qzHFgGciFkyiRNtDXtLNb+VsxtMSE77A==
 
 unique-string@^2.0.0:

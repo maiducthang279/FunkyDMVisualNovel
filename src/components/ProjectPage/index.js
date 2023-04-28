@@ -3,6 +3,7 @@ import { firestore } from '../../services/firebase';
 import {
   addData,
   deleteData,
+  deleteListData,
   getData,
   getListData,
   updateData,
@@ -58,11 +59,11 @@ export async function inviteMember(projectId, members, userId) {
 
 export async function addNewGame(values) {
   const newGame = await addData(collection(firestore, 'games'), {
-    ...values,
     status: 'Work in progress',
     description: 'Nội dung đang được phát triển',
     thumbnail: '',
     background: '',
+    ...values,
     createdTime: Date.now(),
     modifiedTime: Date.now(),
   });
@@ -70,6 +71,10 @@ export async function addNewGame(values) {
 }
 
 export async function deleteGame(id) {
+  const scenes = await getListData(
+    query(collection(firestore, 'scenes'), where('gameId', '==', id))
+  );
+  await deleteListData(scenes, 'scenes');
   return await deleteData(doc(firestore, 'games', id));
 }
 

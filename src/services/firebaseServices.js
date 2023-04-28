@@ -14,6 +14,7 @@ import {
   getDocs,
   setDoc,
   updateDoc,
+  writeBatch,
 } from 'firebase/firestore';
 import { auth, firestore, googleProvider } from './firebase';
 
@@ -101,4 +102,22 @@ export async function updateUserProfile(data) {
     displayName: data.displayName,
     photoURL: data.photoURL,
   });
+}
+
+export async function createListData(data, collectionName) {
+  const batch = writeBatch(firestore);
+  data.forEach((item) => {
+    const docRef = doc(firestore, collectionName);
+    batch.set(docRef, item);
+  });
+  return batch.commit();
+}
+
+export async function deleteListData(data, collectionName) {
+  const batch = writeBatch(firestore);
+  data.forEach((item) => {
+    const docRef = doc(firestore, collectionName, item.id);
+    batch.delete(docRef);
+  });
+  return batch.commit();
 }

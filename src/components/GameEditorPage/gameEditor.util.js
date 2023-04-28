@@ -64,6 +64,7 @@ export const makeNewNode = (type, data) => {
 export const EVENT_TYPES = [
   { value: 'None', label: 'None' },
   { value: 'Set Background', label: 'Set Background' },
+  { value: 'Remove Background', label: 'Remove Background' },
   { value: 'Set Character', label: 'Set Character' },
   { value: 'Remove Character', label: 'Remove Character' },
   { value: 'Go to Next Scene', label: 'Go to Next Scene' },

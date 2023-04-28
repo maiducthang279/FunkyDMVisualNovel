@@ -18,6 +18,9 @@ import { useRecoilValue } from 'recoil';
 import { addNewGame, inviteMember } from '.';
 import { userState } from '../../routes/store';
 import GameTable from './GameTable';
+import { gameEditorLoader } from '../GameEditorPage';
+import { downloadObjectAsJson } from '../utils/utils';
+import { createListData } from '../../services/firebaseServices';
 
 const CreateNewGame = ({ projectId, onChange }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -115,6 +118,30 @@ const ProjectPage = () => {
     setGames((prevGames) => prevGames.filter((item) => item.id !== id));
   };
 
+  const handleMakeACopy = async (gameId) => {
+    const { game, scenes } = await gameEditorLoader({
+      params: { gameId },
+    });
+    // downloadObjectAsJson(res, `${game.name}`);
+    const { id, key, rootScene, status, ...rest } = game;
+    const newGame = { ...rest, name: `${game.name} (copy)` };
+    addNewGame(newGame).then((result) => {
+      const newScenes = scenes.map((scene) => {
+        const { id, ...rest } = scene;
+        return { ...rest, gameId: result.id };
+      });
+      createListData(newScenes, 'scenes');
+      handleCreateNewGame(result.id, newGame);
+    });
+  };
+
+  const handleExport = async (gameId) => {
+    const data = await gameEditorLoader({
+      params: { gameId },
+    });
+    downloadObjectAsJson(data, `${data.game.name}`);
+  };
+
   return (
     <Row className="project_container">
       <Col
@@ -188,6 +215,8 @@ const ProjectPage = () => {
               project={project}
               games={games}
               onDeleteSuccess={handleDeleteGame}
+              onMakeACopy={handleMakeACopy}
+              onExport={handleExport}
             ></GameTable>
           </div>
         </Card>

@@ -37,6 +37,7 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
   const [leftCharacter, setLeftCharacter] = useState(null);
   const [rightCharacter, setRightCharacter] = useState(null);
   const [background, setBackground] = useState(null);
+  const [backgroundEffect, setBackgroundEffect] = useState(null);
   const [variables, setVariables] = useState([]);
 
   const [isDisable, setIsDisable] = useState(false);
@@ -166,6 +167,18 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
       case 'Set Background':
         initBackground(params);
         break;
+      case 'Remove Background':
+        if (params.effect === 'fade') {
+          setBackgroundEffect('fade');
+          setTimeout(() => {
+            setBackgroundEffect(null);
+            goToNextStep();
+          }, 1500);
+        } else {
+          removeBackground();
+          goToNextStep();
+        }
+        break;
       case 'Go to Next Scene':
         goToNextScene(params);
         break;
@@ -181,7 +194,9 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
       default:
         break;
     }
-    if (!(currentNode.eventType === 'Check Variable')) {
+    if (
+      !['Check Variable', 'Remove Background'].includes(currentNode.eventType)
+    ) {
       goToNextStep();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -208,6 +223,10 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
   const initBackground = (params) => {
     const { backgroundUrl } = params;
     setBackground(backgroundUrl);
+  };
+
+  const removeBackground = (params) => {
+    setBackground(null);
   };
 
   const hideDialog = (params) => {
@@ -421,7 +440,13 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
           offsetX={-getStageSize().width / 2}
           offsetY={-getStageSize().height}
         >
-          {background && <KonvaBackground url={background}></KonvaBackground>}
+          {background && (
+            <KonvaBackground
+              url={background}
+              effect={backgroundEffect}
+              removeBackground={removeBackground}
+            ></KonvaBackground>
+          )}
         </Layer>
         <Layer
           offsetX={-getStageSize().width / 2}

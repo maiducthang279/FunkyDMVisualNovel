@@ -97,6 +97,24 @@ const GameEventForm = ({ form, nextNodeOptions }) => {
             </Select>
           </Form.Item>
         );
+      case 'Remove Background':
+        return (
+          <>
+            <Form.Item
+              name={['params', 'effect']}
+              rules={[{ required: true, message: 'Can not be empty!' }]}
+            >
+              <Select
+                placeholder="Effect"
+                options={[
+                  { value: 'none', label: 'None' },
+                  { value: 'fade', label: 'Fade' },
+                ]}
+                onChange={() => form.submit()}
+              ></Select>
+            </Form.Item>
+          </>
+        );
       case 'Set Character':
         return (
           <>
