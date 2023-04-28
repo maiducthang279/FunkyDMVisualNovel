@@ -119,18 +119,14 @@ const GamePlayScene = ({ currentScene }) => {
         removeCharacter(params);
         break;
       case 'Set Background':
+        setBackgroundEffect(null);
         initBackground(params);
         break;
       case 'Remove Background':
         if (params.effect === 'fade') {
           setBackgroundEffect('fade');
-          setTimeout(() => {
-            setBackgroundEffect(null);
-            goToNextStep();
-          }, 1500);
         } else {
           removeBackground();
-          goToNextStep();
         }
         break;
       case 'Go to Next Scene':
@@ -148,9 +144,7 @@ const GamePlayScene = ({ currentScene }) => {
       default:
         break;
     }
-    if (
-      !['Check Variable', 'Remove Background'].includes(currentNode.eventType)
-    ) {
+    if (!['Check Variable'].includes(currentNode.eventType)) {
       goToNextStep();
     }
   };
@@ -201,14 +195,12 @@ const GamePlayScene = ({ currentScene }) => {
         case 'equal':
           if (currentVariable.current === option.value) {
             setCurrentNode(data.get(option.nextId));
-            // setTimeout(() => setCurrentNode(data.get(option.nextId)),0);
             break Loop;
           }
           break;
         case 'not equal':
           if (currentVariable.current !== option.value) {
             setCurrentNode(data.get(option.nextId));
-            // setTimeout(() => setCurrentNode(data.get(option.nextId)),0);
             break Loop;
           }
           break;

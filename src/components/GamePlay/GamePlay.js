@@ -165,18 +165,14 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
         removeCharacter(params);
         break;
       case 'Set Background':
+        setBackgroundEffect(null);
         initBackground(params);
         break;
       case 'Remove Background':
         if (params.effect === 'fade') {
           setBackgroundEffect('fade');
-          setTimeout(() => {
-            setBackgroundEffect(null);
-            goToNextStep();
-          }, 1500);
         } else {
           removeBackground();
-          goToNextStep();
         }
         break;
       case 'Go to Next Scene':
@@ -194,9 +190,7 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
       default:
         break;
     }
-    if (
-      !['Check Variable', 'Remove Background'].includes(currentNode.eventType)
-    ) {
+    if (!['Check Variable'].includes(currentNode.eventType)) {
       goToNextStep();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

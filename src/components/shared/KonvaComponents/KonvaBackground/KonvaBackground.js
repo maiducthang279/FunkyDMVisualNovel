@@ -34,9 +34,11 @@ const KonvaBackground = ({ url, effect, removeBackground, ...rest }) => {
       imageRef.current.to({
         duration: 1,
         opacity: 0,
-        onFinish: () => {
-          removeBackground();
-        },
+      });
+    } else {
+      imageRef.current?.to({
+        duration: 1,
+        opacity: 1,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
