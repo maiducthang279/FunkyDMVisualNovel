@@ -20,6 +20,7 @@ import { defaultImage } from '../../../services/util';
 import Background from '../../shared/Background/Background';
 import UploadImage from '../../shared/UploadImage/UploadImage';
 import '../GameEditorPage.scss';
+import ReactQuill from 'react-quill';
 
 const { Title, Text } = Typography;
 
@@ -190,6 +191,53 @@ const GameMetadataForm = ({ game, form }) => {
               <Input.TextArea
                 autoSize={{ minRows: 2, maxRows: 6 }}
                 placeholder="Description"
+              />
+            </Form.Item>
+            <Divider></Divider>
+            <Text>Credit</Text>
+            <Form.Item
+              name={'credit'}
+              rules={[{ required: true, message: 'Can not be empty!' }]}
+            >
+              <ReactQuill
+                theme="snow"
+                onBlur={() => form.submit()}
+                modules={{
+                  toolbar: [
+                    [{ header: [] }, { font: [] }],
+                    [{ size: [] }],
+                    ['bold', 'italic', 'underline'],
+                    [
+                      { list: 'ordered' },
+                      { list: 'bullet' },
+                      { indent: '-1' },
+                      { indent: '+1' },
+                    ],
+                    ['link', 'image'],
+                    ['clean'],
+                    [
+                      { align: '' },
+                      { align: 'center' },
+                      { align: 'right' },
+                      { align: 'justify' },
+                    ],
+                  ],
+                }}
+                formats={[
+                  'header',
+                  'font',
+                  'size',
+                  'color',
+                  'bold',
+                  'italic',
+                  'underline',
+                  'list',
+                  'bullet',
+                  'indent',
+                  'link',
+                  'image',
+                  'align',
+                ]}
               />
             </Form.Item>
           </div>

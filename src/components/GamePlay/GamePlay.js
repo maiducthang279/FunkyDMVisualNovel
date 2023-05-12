@@ -400,7 +400,9 @@ const GamePlay = ({ game, loadGameSlot, onBack }) => {
             offsetX={-getStageSize().width / 2}
             offsetY={-getStageSize().height}
           >
-            {background && <KonvaBackground url={background}></KonvaBackground>}
+            {game.background && (
+              <KonvaBackground url={game.background}></KonvaBackground>
+            )}
           </Layer>
         </Stage>
         <div className="credit">

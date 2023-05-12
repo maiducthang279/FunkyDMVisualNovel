@@ -9,6 +9,7 @@ import SaveAndLoad from '../shared/SaveAndLoad/SaveAndLoad';
 import { useRecoilState } from 'recoil';
 import { currentEditedGameState } from '../../routes/store';
 import GamePlay from '../GamePlay';
+import DOMPurify from 'dompurify';
 
 const GamePage = () => {
   const loaderData = useLoaderData();
@@ -18,9 +19,12 @@ const GamePage = () => {
   const [saveSlot, setSaveSlot] = useState(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isEndGame, setIsEndGame] = useState(false);
+  const [credit, setCredit] = useState('');
 
   useEffect(() => {
     setGame(loaderData);
+    setCredit(loaderData.credit || '');
     setSaveSlot(null);
     return () => {
       setGame(null);
@@ -50,6 +54,38 @@ const GamePage = () => {
           setSaveSlot(null);
         }}
       />
+    );
+  }
+
+  if (game && isEndGame) {
+    return (
+      <div className="game_page_container">
+        <div className="background">
+          <img src={game.background} alt="main page"></img>
+        </div>
+        <div className="credit">
+          <div
+            className="credit_content credit-animation"
+            style={{
+              transition: `transform ${
+                credit.split('<p>').length + 10
+              }s ease-in`,
+            }}
+          >
+            <div className="the_end">Credit</div>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(credit),
+              }}
+            />
+          </div>
+          <div className="credit_footer">
+            <MenuButton onClick={() => setIsEndGame(false)}>
+              Về trang chủ
+            </MenuButton>
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -83,7 +119,9 @@ const GamePage = () => {
                 <GameSettings />
               </Col>
               <Col span={24}>
-                <MenuButton>Credit</MenuButton>
+                <MenuButton onClick={() => setIsEndGame(true)}>
+                  Credit
+                </MenuButton>
               </Col>
               <Col span={24}>
                 <MenuButton onClick={() => exit()}>Thoát</MenuButton>
